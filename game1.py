@@ -137,10 +137,8 @@ class Game:
         self.inventory_label.config(text="Inventory: " + self.display_inventory())
 
     def display_inventory(self):
-        # Display a simple inventory list
         return ', '.join([f"{item}: {qty}" for item, qty in self.inventory.items()])
 
-# Set up the Tkinter window
 root = tk.Tk()
 game = Game(root)
 root.mainloop()
