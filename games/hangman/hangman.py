@@ -53,10 +53,10 @@ class HangmanGame:
     def draw_hangman(self):
         self.canvas.delete("hangman")
         # Draw the static parts of the hangman
-        self.canvas.create_line(100, 350, 300, 350, tags="hangman")  # Base
-        self.canvas.create_line(200, 350, 200, 50, tags="hangman")  # Pole
-        self.canvas.create_line(200, 50, 300, 50, tags="hangman")  # Top bar
-        self.canvas.create_line(300, 50, 300, 100, tags="hangman")  # Rope
+        self.canvas.create_line(100, 350, 300, 350, tags="hangman")  
+        self.canvas.create_line(200, 350, 200, 50, tags="hangman")  
+        self.canvas.create_line(200, 50, 300, 50, tags="hangman")  
+        self.canvas.create_line(300, 50, 300, 100, tags="hangman")  
         
         # Draw the parts based on the number of mistakes
         if self.mistakes > 0:
