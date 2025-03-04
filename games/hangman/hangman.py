@@ -74,7 +74,7 @@ class HangmanGame:
 
     def check_game_over(self):
         if "_" not in self.word_display.get():
-            self.end_game("Congratulations! You won!")
+            self.end_game(f"Congratulations! You won! The word was {self.word}")
         elif self.mistakes >= self.max_mistakes:
             self.end_game(f"Game Over! The word was {self.word}")
 
