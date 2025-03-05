@@ -83,7 +83,7 @@ class Game:
     def eat(self):
         # You can eat Canned Soup to restore hunger
         if 'Canned Soup' in self.inventory and self.inventory['Canned Soup'] > 0:
-            self.hunger = min(self.hunger + 50, 100)  # Restore 50% hunger
+            self.hunger = min(self.hunger + 50, 100)  
             self.inventory['Canned Soup'] -= 1
             self.update_stats()
         else:
