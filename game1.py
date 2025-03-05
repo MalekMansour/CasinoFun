@@ -116,7 +116,7 @@ class Game:
         crate_items = ['Food', 'Water', 'Bandages', 'Knife', 'Sword', 'Bomb']
         item = random.choice(crate_items)
         if item == 'Bomb' and random.random() < 0.02:
-            self.health = 0  # Bomb kills the player
+            self.health = 0  
             self.update_stats()
             messagebox.showwarning("Game Over", "You were killed by a bomb!")
             self.root.quit()
