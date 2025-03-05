@@ -98,13 +98,9 @@ class Game:
         else:
             messagebox.showwarning("Inventory", "No Water Bottle to drink!")
 
-    def open_map(self):
-        # Implement logic to show a map and where the player is
-        messagebox.showinfo("Map", "You are here, keep walking to explore!")
-
     def check_for_checkpoint(self):
         # Random chance to encounter a checkpoint
-        if random.random() < 0.1:  X
+        if random.random() < 0.1:  
             checkpoint_type = random.choice(['Empty', 'Crate', 'Important'])
             if checkpoint_type == 'Crate':
                 self.encounter_crate()
