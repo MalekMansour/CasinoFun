@@ -104,7 +104,7 @@ class Game:
 
     def check_for_checkpoint(self):
         # Random chance to encounter a checkpoint
-        if random.random() < 0.1:  
+        if random.random() < 0.1:  X
             checkpoint_type = random.choice(['Empty', 'Crate', 'Important'])
             if checkpoint_type == 'Crate':
                 self.encounter_crate()
