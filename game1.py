@@ -92,7 +92,7 @@ class Game:
     def drink(self):
         # You can drink Water Bottle to restore thirst
         if 'Water Bottle' in self.inventory and self.inventory['Water Bottle'] > 0:
-            self.thirst = min(self.thirst + 100, 100)  # Restore 100% thirst
+            self.thirst = min(self.thirst + 100, 100)  
             self.inventory['Water Bottle'] -= 1
             self.update_stats()
         else:
