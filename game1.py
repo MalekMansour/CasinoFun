@@ -7,21 +7,18 @@ class Game:
         self.root = root
         self.root.title("Desert Survival Game")
 
-        # Player stats
         self.health = 100
         self.hunger = 100
         self.thirst = 100
         self.money = 10
         self.miles_walked = 0
 
-        # Inventory
         self.inventory = {
             'Canned Soup': 5,
             'Water Bottle': 5,
             'Money': 10,
         }
 
-        # Set up UI elements
         self.setup_ui()
 
     def setup_ui(self):
