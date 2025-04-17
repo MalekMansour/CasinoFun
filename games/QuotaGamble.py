@@ -6,11 +6,8 @@ def main():
     round_number = 1
     cycle = 1
 
-    # Define multipliers with custom probabilities:
-    # 0.2, 0.5, 1, and 2 each have a 20.5% chance
-    # 5 has a 10% chance, 10 has a 3% chance, and 100 (jackpot) has a 5% chance
+   
     multipliers = [0.2, 0.5, 1, 2, 5, 10, 100]
-    # Relative weights sum to 1000 for clarity
     weights = [205, 205, 205, 205, 100, 30, 50]
 
     print("Welcome to the Survival Gambling Game!")
