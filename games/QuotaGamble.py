@@ -6,8 +6,12 @@ def main():
     round_number = 1
     cycle = 1
 
+    # Define multipliers with custom probabilities:
+    # 0.2, 0.5, 1, and 2 each have a 20.5% chance
+    # 5 has a 10% chance, 10 has a 3% chance, and 100 (jackpot) has a 5% chance
     multipliers = [0.2, 0.5, 1, 2, 5, 10, 100]
-    weights = [16.666616667] * 6 + [0.0003]
+    # Relative weights sum to 1000 for clarity
+    weights = [205, 205, 205, 205, 100, 30, 50]
 
     print("Welcome to the Survival Gambling Game!")
     print("Every 7 rounds, you must meet the money quota or you lose.")
@@ -17,6 +21,7 @@ def main():
         print(f"--- Round {round_number} ---")
         print(f"Cycle {cycle}, Money: ${money:.2f}, Quota: ${quota:.2f}")
 
+        # Prompt user for their bet
         while True:
             try:
                 bet = float(input("Enter your bet amount: $"))
@@ -29,6 +34,7 @@ def main():
             except ValueError:
                 print("Please enter a valid number.")
 
+        # Perform the gamble
         multiplier = random.choices(multipliers, weights=weights, k=1)[0]
         win_amount = bet * multiplier
         money = money - bet + win_amount
@@ -36,15 +42,18 @@ def main():
         print(f"Multiplier: x{multiplier}")
         print(f"After round {round_number}, you have: ${money:.2f}\n")
 
+        # Check for bankruptcy
         if money <= 0:
             print("You went bankrupt! Game over.")
             break
 
+        # After every 7 rounds, check the quota
         if round_number % 7 == 0:
             print(f"End of cycle {cycle}. You need at least ${quota:.2f} to survive.")
             if money >= quota:
                 print("Congratulations! You met the quota and advance to the next cycle.\n")
                 cycle += 1
+                # Increase quota for next cycle (adjust factor as desired)
                 quota *= 1.5
                 print(f"New quota: ${quota:.2f}\n")
             else:
