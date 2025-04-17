@@ -17,7 +17,6 @@ def main():
         print(f"--- Round {round_number} ---")
         print(f"Cycle {cycle}, Money: ${money:.2f}, Quota: ${quota:.2f}")
 
-        # Prompt user for their bet
         while True:
             try:
                 bet = float(input("Enter your bet amount: $"))
