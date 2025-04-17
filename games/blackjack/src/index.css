@@ -1,5 +1,5 @@
 body {
-  background: #0b3d91;
+  background: #121212;
   color: #fff;
   font-family: sans-serif;
   text-align: center;
@@ -7,11 +7,13 @@ body {
 }
 .game { max-width: 600px; margin: auto; }
 .tables { display: flex; justify-content: space-around; margin-bottom: 1rem; }
-.hand { }
+.hand {}
 .cards { display: flex; }
+
 .card {
-  width: 60px; height: 90px;
-  border: 2px solid #fff;
+  width: 60px;
+  height: 90px;
+  border: 2px solid #000;
   border-radius: 8px;
   background: #fff;
   color: #000;
@@ -22,21 +24,26 @@ body {
   position: absolute;
   display: flex;
   align-items: center;
+  top: 4px;
+  left: 4px;
 }
 .card .corner.flip {
-  bottom: 4px; right: 4px;
+  bottom: 4px;
+  right: 4px;
   transform: rotate(180deg);
 }
-.card .corner { top: 4px; left: 4px; }
 .card .center {
-  position: absolute; top:50%; left:50%;
-  transform: translate(-50%,-50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   font-size: 1.5rem;
 }
 .card.back {
-  background: #444;
-  border: 2px solid #222;
+  background: #222;
+  border: 2px solid #444;
 }
+
 .controls button, .new {
   padding: 0.5rem 1rem;
   margin: 0.5rem;
@@ -44,5 +51,23 @@ body {
   cursor: pointer;
 }
 .controls button[disabled] { opacity: 0.5; cursor: not-allowed; }
+
 .difficulty label { margin: 0 0.5rem; cursor: pointer; }
+
 .msg { margin-top: 1rem; font-size: 1.25rem; }
+
+.rules {
+  text-align: left;
+  background: #1e1e1e;
+  padding: 1rem;
+  margin-top: 2rem;
+  border-radius: 8px;
+}
+.rules h2, .rules ul li {
+  color: #fff;
+  margin: 0.5rem 0;
+}
+.rules ul {
+  list-style: disc inside;
+  padding-left: 0;
+}
