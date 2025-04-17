@@ -29,7 +29,6 @@ def main():
             except ValueError:
                 print("Please enter a valid number.")
 
-        # Perform the gamble
         multiplier = random.choices(multipliers, weights=weights, k=1)[0]
         win_amount = bet * multiplier
         money = money - bet + win_amount
@@ -37,18 +36,15 @@ def main():
         print(f"Multiplier: x{multiplier}")
         print(f"After round {round_number}, you have: ${money:.2f}\n")
 
-        # Check for bankruptcy
         if money <= 0:
             print("You went bankrupt! Game over.")
             break
 
-        # After every 7 rounds, check the quota
         if round_number % 7 == 0:
             print(f"End of cycle {cycle}. You need at least ${quota:.2f} to survive.")
             if money >= quota:
                 print("Congratulations! You met the quota and advance to the next cycle.\n")
                 cycle += 1
-                # Increase quota for next cycle (adjust factor as desired)
                 quota *= 1.5
                 print(f"New quota: ${quota:.2f}\n")
             else:
