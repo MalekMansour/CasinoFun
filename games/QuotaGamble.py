@@ -7,7 +7,6 @@ def main():
     cycle = 1
 
     multipliers = [0.2, 0.5, 1, 2, 5, 10, 100]
-    # Jackpot (x100) has a 0.0003% chance; the other six share the remaining probability equally
     weights = [16.666616667] * 6 + [0.0003]
 
     print("Welcome to the Survival Gambling Game!")
