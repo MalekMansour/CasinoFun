@@ -19,3 +19,4 @@ export default function Card({ card }) {
     </div>
   )
 }
+X
