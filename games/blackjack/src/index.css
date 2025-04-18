@@ -5,11 +5,13 @@ body {
   text-align: center;
   padding: 2rem;
 }
+
 .game { max-width: 600px; margin: auto; }
 .tables { display: flex; justify-content: space-around; margin-bottom: 1rem; }
 .hand {}
 .cards { display: flex; }
 
+/* White cards on dark background */
 .card {
   width: 60px;
   height: 90px;
@@ -44,18 +46,42 @@ body {
   border: 2px solid #444;
 }
 
-.controls button, .new {
+/* Controls & Buttons */
+.controls button,
+.new {
   padding: 0.5rem 1rem;
   margin: 0.5rem;
   font-size: 1rem;
   cursor: pointer;
 }
-.controls button[disabled] { opacity: 0.5; cursor: not-allowed; }
+.controls button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.difficulty label {
+  margin: 0 0.5rem;
+  cursor: pointer;
+}
+.msg {
+  margin-top: 1rem;
+  font-size: 1.25rem;
+}
 
-.difficulty label { margin: 0 0.5rem; cursor: pointer; }
+/* Bank & Betting UI */
+.bank {
+  margin-bottom: 1rem;
+}
+.bank input[type="number"] {
+  width: 80px;
+  padding: 0.25rem;
+  margin-right: 0.5rem;
+}
+.bank button {
+  padding: 0.25rem 0.5rem;
+  margin-left: 0.5rem;
+}
 
-.msg { margin-top: 1rem; font-size: 1.25rem; }
-
+/* Rules Panel */
 .rules {
   text-align: left;
   background: #1e1e1e;
@@ -63,7 +89,8 @@ body {
   margin-top: 2rem;
   border-radius: 8px;
 }
-.rules h2, .rules ul li {
+.rules h2,
+.rules ul li {
   color: #fff;
   margin: 0.5rem 0;
 }
