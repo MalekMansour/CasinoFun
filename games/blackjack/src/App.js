@@ -17,9 +17,37 @@ export default function App() {
   const [message, setMessage] = useState('');
   const [over, setOver] = useState(false);
 
+  const [balance, setBalance] = useState(100);
+  const [bet, setBet] = useState('');
+  const [betPlaced, setBetPlaced] = useState(false);
+
+  // Whenever a bet is placed (or difficulty changes), start a new round
   useEffect(() => {
-    startGame();
-  }, [diff]);
+    if (betPlaced) startGame();
+  }, [betPlaced, diff]);
+
+  function addFunds() {
+    const input = prompt('Enter amount to add to your balance:');
+    const amt = parseInt(input, 10);
+    if (isNaN(amt) || amt <= 0) {
+      alert('Invalid amount.');
+      return;
+    }
+    setBalance(bal => bal + amt);
+  }
+
+  function placeBet() {
+    const b = parseInt(bet, 10);
+    if (isNaN(b) || b <= 0) {
+      alert('Please enter a valid bet greater than 0.');
+      return;
+    }
+    if (b > balance) {
+      alert('Bet exceeds your balance.');
+      return;
+    }
+    setBetPlaced(true);
+  }
 
   function startGame() {
     const { deck: newDeck, playerHand, dealerHand } = dealInitialHands();
@@ -36,9 +64,12 @@ export default function App() {
     const newHand = [...playerHand, card];
     setDeck(rest);
     setPlayerHand(newHand);
+
     if (getHandValue(newHand) > 21) {
+      const result = 'Dealer wins!';
       setMessage('Busted! Dealer wins.');
       setOver(true);
+      endRound(result);
     }
   }
 
@@ -46,11 +77,13 @@ export default function App() {
     if (over) return;
     let d = [...dealerHand];
     let dDeck = [...deck];
+
     while (shouldDealerHit(d, playerHand, diff, dDeck)) {
       const [card, ...rest] = dDeck;
       d.push(card);
       dDeck = rest;
     }
+
     setDealerHand(d);
     setDeck(dDeck);
 
@@ -60,21 +93,70 @@ export default function App() {
     if (dVal > 21 || pVal > dVal) result = 'Player wins!';
     else if (pVal === dVal) result = 'Push!';
     else result = 'Dealer wins!';
+
     setMessage(result);
     setOver(true);
+    endRound(result);
+  }
+
+  function endRound(result) {
+    if (result === 'Player wins!') {
+      setBalance(bal => bal + parseInt(bet, 10));
+    } else if (result === 'Dealer wins!') {
+      setBalance(bal => bal - parseInt(bet, 10));
+    }
+    // Push = no change
+    setBetPlaced(false);
+    setBet('');
   }
 
   return (
     <div className="game">
       <h1>♣ React Blackjack ♠</h1>
+
+      <div className="bank">
+        <p>Balance: ${balance}</p>
+        <button onClick={addFunds}>Add Funds</button>
+      </div>
+
+      {!betPlaced ? (
+        <div className="bank">
+          <input
+            type="number"
+            placeholder="Bet amount"
+            value={bet}
+            onChange={e => setBet(e.target.value)}
+            min="1"
+            max={balance}
+          />
+          <button onClick={placeBet}>Place Bet</button>
+        </div>
+      ) : (
+        <p>Current Bet: ${bet}</p>
+      )}
+
       <DifficultySelector difficulty={diff} setDifficulty={setDiff} />
+
       <div className="tables">
         <Hand cards={playerHand} title="Player" />
         <Hand cards={dealerHand} title="Dealer" hideHoleCard={!over} />
       </div>
-      <Controls onHit={handleHit} onStand={handleStand} disabled={over} />
+
+      <Controls
+        onHit={handleHit}
+        onStand={handleStand}
+        disabled={over || !betPlaced}
+      />
+
       {message && <h2 className="msg">{message}</h2>}
-      <button onClick={startGame} className="new">New Game</button>
+
+      <button
+        onClick={() => betPlaced && startGame()}
+        className="new"
+        disabled={!betPlaced}
+      >
+        New Round
+      </button>
 
       <section className="rules">
         <h2>Blackjack Rules</h2>
