@@ -1,9 +1,7 @@
 import React from 'react';
 
 export default function Card({ card }) {
-  // red for hearts & diamonds, black otherwise
   const color = card.suit === '♥' || card.suit === '♦' ? 'red' : 'black';
-
   return (
     <div className="card" style={{ color }}>
       <div className="corner">
