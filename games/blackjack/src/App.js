@@ -21,7 +21,7 @@ export default function App() {
   const [bet, setBet] = useState('');
   const [betPlaced, setBetPlaced] = useState(false);
 
-  // Whenever a bet is placed (or difficulty changes), start a new round
+  // Deal initial hands when a bet is placed or difficulty changes
   useEffect(() => {
     if (betPlaced) startGame();
   }, [betPlaced, diff]);
@@ -29,23 +29,14 @@ export default function App() {
   function addFunds() {
     const input = prompt('Enter amount to add to your balance:');
     const amt = parseInt(input, 10);
-    if (isNaN(amt) || amt <= 0) {
-      alert('Invalid amount.');
-      return;
-    }
+    if (isNaN(amt) || amt <= 0) return alert('Invalid amount.');
     setBalance(bal => bal + amt);
   }
 
   function placeBet() {
     const b = parseInt(bet, 10);
-    if (isNaN(b) || b <= 0) {
-      alert('Please enter a valid bet greater than 0.');
-      return;
-    }
-    if (b > balance) {
-      alert('Bet exceeds your balance.');
-      return;
-    }
+    if (isNaN(b) || b <= 0) return alert('Enter a valid bet.');
+    if (b > balance) return alert('Bet exceeds balance.');
     setBetPlaced(true);
   }
 
@@ -66,10 +57,9 @@ export default function App() {
     setPlayerHand(newHand);
 
     if (getHandValue(newHand) > 21) {
-      const result = 'Dealer wins!';
       setMessage('Busted! Dealer wins.');
       setOver(true);
-      endRound(result);
+      endRound('Dealer wins!');
     }
   }
 
@@ -77,13 +67,11 @@ export default function App() {
     if (over) return;
     let d = [...dealerHand];
     let dDeck = [...deck];
-
     while (shouldDealerHit(d, playerHand, diff, dDeck)) {
       const [card, ...rest] = dDeck;
       d.push(card);
       dDeck = rest;
     }
-
     setDealerHand(d);
     setDeck(dDeck);
 
@@ -105,9 +93,7 @@ export default function App() {
     } else if (result === 'Dealer wins!') {
       setBalance(bal => bal - parseInt(bet, 10));
     }
-    // Push = no change
-    setBetPlaced(false);
-    setBet('');
+    // note: we no longer clear betPlaced—keeps the same bet for the next round
   }
 
   return (
@@ -150,23 +136,20 @@ export default function App() {
 
       {message && <h2 className="msg">{message}</h2>}
 
-      <button
-        onClick={() => betPlaced && startGame()}
-        className="new"
-        disabled={!betPlaced}
-      >
+      {/* new: disabled while game is in progress (over===false) */}
+      <button onClick={startGame} className="new" disabled={!over}>
         New Round
       </button>
 
       <section className="rules">
         <h2>Blackjack Rules</h2>
         <ul>
-          <li>Goal: get closer to 21 than the dealer without busting (going over 21).</li>
-          <li>Number cards are worth their face value; J/Q/K = 10; Ace = 1 or 11.</li>
-          <li>You may “Hit” to draw a card or “Stand” to end your turn.</li>
-          <li>If your hand exceeds 21, you bust and lose immediately.</li>
-          <li>The dealer must hit until reaching at least 17, then stand.</li>
-          <li>If you and the dealer tie, it’s a “Push” (nobody wins).</li>
+          <li>Goal: get closer to 21 than the dealer without busting.</li>
+          <li>Number cards = face value; J/Q/K = 10; Ace = 1 or 11.</li>
+          <li>“Hit” to draw a card; “Stand” to end turn.</li>
+          <li>Bust (>21) = automatic loss.</li>
+          <li>Dealer hits until ≥17, then stands.</li>
+          <li>Tie = “Push” (no change to balance).</li>
         </ul>
       </section>
     </div>
