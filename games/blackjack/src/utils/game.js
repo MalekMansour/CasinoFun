@@ -1,5 +1,3 @@
-// basic deck, shuffling, hand-value, and dealer AI logic
-
 export const suits = ['♠', '♥', '♦', '♣'];
 export const ranks = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 
@@ -33,12 +31,6 @@ export function getHandValue(hand){
   return total;
 }
 
-/**
- * Dealer AI:
- *  - easy: hits randomly under 17
- *  - medium: standard (hits < 17)
- *  - hard: estimates bust probability + compares to player
- */
 export function shouldDealerHit(dealerHand, playerHand, difficulty, deck){
   const dVal = getHandValue(dealerHand);
   const pVal = getHandValue(playerHand);
