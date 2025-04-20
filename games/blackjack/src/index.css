@@ -135,9 +135,10 @@ body.light-mode {
 }
 .delete-btn {
   margin-left: 0.5rem;
-  background: none;
+  background: red;
   border: none;
-  color: red;
+  border-radius: 8px;
+  color: white;
   cursor: pointer;
 }
 
