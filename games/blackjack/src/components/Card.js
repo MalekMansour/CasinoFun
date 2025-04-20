@@ -5,13 +5,13 @@ export default function Card({ card }) {
   return (
     <div className="card" style={{ color }}>
       <div className="corner">
-        <span>{card.rank}{card.suit}</span>
+        {card.rank}{card.suit}
       </div>
       <div className="center">
-        <span style={{ fontSize: '1.5rem' }}>{card.suit}</span>
+        <span>{card.suit}</span>
       </div>
       <div className="corner flip">
-        <span>{card.rank}{card.suit}</span>
+        {card.rank}{card.suit}
       </div>
     </div>
   );
