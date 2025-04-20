@@ -1,6 +1,5 @@
 /* ─── Theme variables ───────────────────────────────────────────────── */
 body {
-  /* default = dark mode */
   --bg-color: #121212;
   --text-color: #fff;
   --card-border-color: #fff;
@@ -11,8 +10,6 @@ body {
   text-align: center;
   padding: 2rem;
 }
-
-/* light mode overrides */
 body.light-mode {
   --bg-color: #fff;
   --text-color: #000;
@@ -20,14 +17,13 @@ body.light-mode {
 }
 
 /* ─── Layout ─────────────────────────────────────────────────────────── */
-.game { max-width: 600px; margin: auto; }
+.main-menu, .game { max-width: 600px; margin: auto; }
 .tables { display: flex; justify-content: space-around; margin-bottom: 1rem; }
 .cards { display: flex; }
 
 /* ─── Card styling ───────────────────────────────────────────────────── */
 .card {
-  width: 60px;
-  height: 90px;
+  width: 60px; height: 90px;
   border: 2px solid var(--card-border-color);
   border-radius: 8px;
   background: #fff;
@@ -35,17 +31,13 @@ body.light-mode {
   position: relative;
 }
 .card .corner {
-  position: absolute;
-  top: 4px; left: 4px;
-  display: flex; align-items: center;
+  position: absolute; top:4px; left:4px;
 }
 .card .corner.flip {
-  bottom: -64px; right: 4px;
-  transform: rotate(180deg);
+  bottom:4px; right:-28px; transform: rotate(180deg);
 }
 .card .center {
-  position: absolute;
-  top: 50%; left: 50%;
+  position: absolute; top:50%; left:50%;
   transform: translate(-50%, -50%);
   font-size: 1.5rem;
 }
@@ -71,23 +63,17 @@ body.light-mode {
 .msg { margin-top: 1rem; font-size: 1.25rem; }
 
 /* ─── Bank & Betting UI ──────────────────────────────────────────────── */
-.bank {
-  margin-bottom: 1rem;
-}
+.bank { margin-bottom: 1rem; }
 .bank input[type="number"] {
   width: 100px; padding: 0.25rem; margin-right: 0.5rem;
 }
 
 /* ─── Theme‑toggle icon ─────────────────────────────────────────────── */
 .theme-toggle {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  background: none;
-  border: none;
+  position: fixed; top:1rem; right:1rem;
+  background: none; border: none;
   color: var(--text-color);
-  font-size: 1.5rem;
-  cursor: pointer;
+  font-size: 1.5rem; cursor: pointer;
 }
 
 /* ─── Rules Panel ───────────────────────────────────────────────────── */
@@ -98,11 +84,5 @@ body.light-mode {
   margin-top: 2rem;
   border-radius: 8px;
 }
-.rules h2,
-.rules ul li {
-  margin: 0.5rem 0;
-}
-.rules ul {
-  list-style: disc inside;
-  padding-left: 0;
-}
+.rules h2, .rules ul li { margin:0.5rem 0; }
+.rules ul { list-style: disc inside; padding-left:0; }
