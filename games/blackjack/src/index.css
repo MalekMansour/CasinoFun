@@ -277,3 +277,21 @@ body.light-mode {
   color: white;
   cursor: pointer;
 }
+
+.top-banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.balance-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem auto 40px;
+  height: 30px;
+  width: 20%;
+  border: 0.9px solid #000;
+  border-radius: 8px;
+  background-color: rgb(0, 116, 8);
+}
