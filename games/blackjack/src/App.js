@@ -10,7 +10,19 @@ import Hand from './components/Hand';
 import Controls from './components/Controls';
 import './index.css';
 
-function MainMenu({ onLoad }) {
+// Generic modal for any message
+function Modal({ message, onClose }) {
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <p>{message}</p>
+        <button onClick={onClose}>OK</button>
+      </div>
+    </div>
+  );
+}
+
+function MainMenu({ onLoad, showModal }) {
   const [usernameInput, setUsernameInput] = useState('');
   const [saves, setSaves] = useState([]);
 
@@ -18,8 +30,8 @@ function MainMenu({ onLoad }) {
     const keys = Object.keys(localStorage)
       .filter(k => k.startsWith('Save_File_'))
       .sort((a, b) => {
-        const na = +a.split('_').pop(),
-              nb = +b.split('_').pop();
+        const na = +a.split('_').pop();
+        const nb = +b.split('_').pop();
         return na - nb;
       });
     setSaves(keys);
@@ -27,7 +39,7 @@ function MainMenu({ onLoad }) {
 
   const createSave = () => {
     const name = usernameInput.trim();
-    if (!name) return alert('Enter a username.');
+    if (!name) return showModal('Enter a username.');
     const indices = saves.map(k => +k.split('_').pop());
     const next = indices.length ? Math.max(...indices) + 1 : 1;
     const key = `Save_File_${next}`;
@@ -75,12 +87,12 @@ function MainMenu({ onLoad }) {
   );
 }
 
-function BetForm({ balance, onBet }) {
+function BetForm({ balance, onBet, showModal }) {
   const [amt, setAmt] = useState('');
   const place = () => {
     const b = parseInt(amt, 10);
-    if (!b || b <= 0) return alert('Enter valid bet.');
-    if (b > balance) return alert('Bet exceeds balance.');
+    if (!b || b <= 0) return showModal('Enter a valid bet.');
+    if (b > balance) return showModal('Bet exceeds balance.');
     onBet(b);
     setAmt('');
   };
@@ -113,14 +125,16 @@ export default function App() {
   const [over, setOver] = useState(true);
 
   const [currentBet, setCurrentBet] = useState(0);
-  const [showBankruptModal, setShowBankruptModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
-  // Apply dark/light mode to body
+  const showModal = msg => setModalMessage(msg);
+
+  // Theme toggle
   useEffect(() => {
     document.body.classList.toggle('light-mode', !darkMode);
   }, [darkMode]);
 
-  // Auto‑save on balance/username change
+  // Auto-save
   useEffect(() => {
     if (currentSave) {
       localStorage.setItem(
@@ -128,20 +142,29 @@ export default function App() {
         JSON.stringify({ username, balance })
       );
     }
-  }, [balance, username, currentSave]);
+  }, [username, balance, currentSave]);
 
-  // If no save yet, show menu
+  // If no save, show menu
   if (!currentSave) {
     return (
-      <MainMenu
-        onLoad={(key, data) => {
-          setCurrentSave(key);
-          setUsername(data.username);
-          setBalance(data.balance);
-          setOver(true);
-          setMessage('');
-        }}
-      />
+      <>
+        <MainMenu
+          onLoad={(key, data) => {
+            setCurrentSave(key);
+            setUsername(data.username);
+            setBalance(data.balance);
+            setOver(true);
+            setMessage('');
+          }}
+          showModal={showModal}
+        />
+        {modalMessage && (
+          <Modal
+            message={modalMessage}
+            onClose={() => setModalMessage('')}
+          />
+        )}
+      </>
     );
   }
 
@@ -162,12 +185,13 @@ export default function App() {
     if (result === 'Player wins!') {
       setBalance(b => b + currentBet);
     } else if (result === 'Dealer wins!') {
-      // Only refill if you've actually hit zero
+      // refill only if truly bankrupt
       if (balance <= 0) {
-        setShowBankruptModal(true);
+        showModal("You went bankrupt! Here's $1,000 to continue.");
         setBalance(1000);
       }
     }
+    // Tie: do nothing to balance
     setOver(true);
   };
 
@@ -185,8 +209,8 @@ export default function App() {
 
   const handleStand = () => {
     if (!inProgress) return;
-    let d = [...dealerHand];
-    let dDeck = [...deck];
+    let d = [...dealerHand],
+      dDeck = [...deck];
     while (shouldDealerHit(d, playerHand, diff, dDeck)) {
       const [card, ...rest] = dDeck;
       d.push(card);
@@ -196,12 +220,12 @@ export default function App() {
     setDeck(dDeck);
 
     const pVal = getHandValue(playerHand),
-          dVal = getHandValue(d);
+      dVal = getHandValue(d);
     let result =
       dVal > 21 || pVal > dVal
         ? 'Player wins!'
         : pVal === dVal
-        ? 'Push!'
+        ? 'Tie'
         : 'Dealer wins!';
 
     setMessage(result);
@@ -209,60 +233,61 @@ export default function App() {
   };
 
   return (
-    <div className="game">
-      {/* Dark/Light toggle */}
-      <button
-        className="theme-toggle"
-        onClick={() => setDarkMode(m => !m)}
-        aria-label="Toggle theme"
-      >
-        {darkMode ? <FaSun /> : <FaMoon />}
-      </button>
-
-      <h1>♣ React Blackjack ♠</h1>
-      <p><strong>User:</strong> {username}</p>
-      <p><strong>Balance:</strong> ${balance}</p>
-
-      {/* Bankruptcy modal */}
-      {showBankruptModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <p>You went bankrupt! Here’s $1,000 to continue.</p>
-            <button onClick={() => setShowBankruptModal(false)}>
-              OK
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Bet form */}
-      {!inProgress ? (
-        <div className="bank">
-          <h2>Place your bet</h2>
-          <BetForm balance={balance} onBet={placeBet} />
-        </div>
-      ) : (
-        <p><strong>Current Bet:</strong> ${currentBet}</p>
-      )}
-
-      <DifficultySelector difficulty={diff} setDifficulty={setDiff} />
-
-      <div className="tables">
-        <Hand cards={playerHand} title="Player" />
-        <Hand
-          cards={dealerHand}
-          title="Dealer"
-          hideHoleCard={!over}
+    <>
+      {modalMessage && (
+        <Modal
+          message={modalMessage}
+          onClose={() => setModalMessage('')}
         />
+      )}
+
+      <div className="game">
+        <button
+          className="theme-toggle"
+          onClick={() => setDarkMode(d => !d)}
+          aria-label="Toggle theme">
+          {darkMode ? <FaSun /> : <FaMoon />}
+        </button>
+
+        <h1>♣ React Blackjack ♠</h1>
+        <p><strong>User:</strong> {username}</p>
+        <p><strong>Balance:</strong> ${balance}</p>
+
+        {!inProgress ? (
+          <div className="bank">
+            <h2>Place your bet</h2>
+            <BetForm
+              balance={balance}
+              onBet={placeBet}
+              showModal={showModal}
+            />
+          </div>
+        ) : (
+          <p><strong>Current Bet:</strong> ${currentBet}</p>
+        )}
+
+        <DifficultySelector
+          difficulty={diff}
+          setDifficulty={setDiff}
+        />
+
+        <div className="tables">
+          <Hand cards={playerHand} title="Player" />
+          <Hand
+            cards={dealerHand}
+            title="Dealer"
+            hideHoleCard={!over}
+          />
+        </div>
+
+        <Controls
+          onHit={handleHit}
+          onStand={handleStand}
+          disabled={!inProgress}
+        />
+
+        {message && <h2 className="msg">{message}</h2>}
       </div>
-
-      <Controls
-        onHit={handleHit}
-        onStand={handleStand}
-        disabled={!inProgress}
-      />
-
-      {message && <h2 className="msg">{message}</h2>}
-    </div>
+    </>
   );
 }
