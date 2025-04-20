@@ -61,7 +61,7 @@ function MainMenu({ onLoad, showModal }) {
 
   return (
     <div className="main-menu">
-      <h1>♣ React Blackjack ♠</h1>
+      <h1>♣ Blackjack ♠</h1>
 
       <div className="bank">
         <h2>Create New Save</h2>
@@ -75,7 +75,7 @@ function MainMenu({ onLoad, showModal }) {
       </div>
 
       <div className="bank">
-        <h2>Load / Delete Save</h2>
+        <h2>Load Save</h2>
         {saves.length ? (
           saves.map(k => {
             const d = JSON.parse(localStorage.getItem(k));
