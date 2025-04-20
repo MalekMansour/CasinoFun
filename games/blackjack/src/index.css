@@ -66,7 +66,7 @@ body.light-mode {
   cursor: pointer;
   display: flex;
   align-items: center;
-  font-size: 1rem;
+  font-size: 1.1rem;
   text-align: left;
 }
 .sidebar .sb-games .sb-item .sb-icon {
@@ -92,20 +92,21 @@ body.light-mode {
 
 /* ─── Main Content ───────────────────────────────────────────────────── */
 .main-content {
-  margin-left: 240px;
-  transition: margin-left 0.3s ease;
+  transition: none;
   padding: 2rem;
-  max-width: 600px;
-  margin: 0 auto;
 }
-.sidebar.collapsed ~ .main-content {
-  margin-left: 0;
+
+/* ─── Centered Game Container ───────────────────────────────────────── */
+.game-area {
+  max-width: 700px;
+  margin: 0 auto;
+  transform: scale(1.1);
 }
 
 /* ─── Layout ─────────────────────────────────────────────────────────── */
 .main-menu,
 .game {
-  max-width: 600px;
+  max-width: 700px;
   margin: auto;
 }
 .tables {
@@ -167,15 +168,15 @@ body.light-mode {
 .bank button {
   background: #28a745;
   color: white;
-  font-size: 1.25rem;
-  padding: 0.75rem 1.5rem;
+  font-size: 1.5rem;
+  padding: 1rem 2rem;
   border-radius: 8px;
   border: none;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 8px rgba(0,0,0,0.3);
   transition: transform 0.1s ease;
 }
 .bank button:hover {
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
 /* ─── Difficulty & Message ───────────────────────────────────────────── */
@@ -193,9 +194,10 @@ body.light-mode {
   margin-bottom: 1rem;
 }
 .bank input[type="number"] {
-  width: 100px;
-  padding: 0.25rem;
+  width: 120px;
+  padding: 0.5rem;
   margin-right: 0.5rem;
+  font-size: 1rem;
 }
 
 /* ─── Theme‑toggle icon ─────────────────────────────────────────────── */
