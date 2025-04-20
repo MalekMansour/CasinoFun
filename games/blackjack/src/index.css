@@ -1,43 +1,51 @@
+/* ─── Theme variables ───────────────────────────────────────────────── */
 body {
-  background: #121212;
-  color: #fff;
+  /* default = dark mode */
+  --bg-color: #121212;
+  --text-color: #fff;
+  --card-border-color: #fff;
+
+  background: var(--bg-color);
+  color: var(--text-color);
   font-family: sans-serif;
   text-align: center;
   padding: 2rem;
 }
 
+/* light mode overrides */
+body.light-mode {
+  --bg-color: #fff;
+  --text-color: #000;
+  --card-border-color: #000;
+}
+
+/* ─── Layout ─────────────────────────────────────────────────────────── */
 .game { max-width: 600px; margin: auto; }
 .tables { display: flex; justify-content: space-around; margin-bottom: 1rem; }
-.hand {}
 .cards { display: flex; }
 
-/* White cards on dark background */
+/* ─── Card styling ───────────────────────────────────────────────────── */
 .card {
   width: 60px;
   height: 90px;
-  border: 2px solid #000;
+  border: 2px solid var(--card-border-color);
   border-radius: 8px;
   background: #fff;
-  color: #000;
   margin: 0 4px;
   position: relative;
 }
 .card .corner {
   position: absolute;
-  display: flex;
-  align-items: center;
-  top: 4px;
-  left: 4px;
+  top: 4px; left: 4px;
+  display: flex; align-items: center;
 }
 .card .corner.flip {
-  bottom: -64px;
-  right: 4px;
+  bottom: -64px; right: 4px;
   transform: rotate(180deg);
 }
 .card .center {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   font-size: 1.5rem;
 }
@@ -46,42 +54,43 @@ body {
   border: 2px solid #444;
 }
 
-/* Controls & Buttons */
+/* ─── Controls & Buttons ────────────────────────────────────────────── */
 .controls button,
+.bank button,
 .new {
   padding: 0.5rem 1rem;
   margin: 0.5rem;
   font-size: 1rem;
   cursor: pointer;
 }
-.controls button[disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
+.controls button[disabled],
+.new[disabled] {
+  opacity: 0.5; cursor: not-allowed;
 }
-.difficulty label {
-  margin: 0 0.5rem;
-  cursor: pointer;
-}
-.msg {
-  margin-top: 1rem;
-  font-size: 1.25rem;
-}
+.difficulty label { margin: 0 0.5rem; cursor: pointer; }
+.msg { margin-top: 1rem; font-size: 1.25rem; }
 
-/* Bank & Betting UI */
+/* ─── Bank & Betting UI ──────────────────────────────────────────────── */
 .bank {
   margin-bottom: 1rem;
 }
 .bank input[type="number"] {
-  width: 80px;
-  padding: 0.25rem;
-  margin-right: 0.5rem;
-}
-.bank button {
-  padding: 0.25rem 0.5rem;
-  margin-left: 0.5rem;
+  width: 100px; padding: 0.25rem; margin-right: 0.5rem;
 }
 
-/* Rules Panel */
+/* ─── Theme‑toggle icon ─────────────────────────────────────────────── */
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* ─── Rules Panel ───────────────────────────────────────────────────── */
 .rules {
   text-align: left;
   background: #1e1e1e;
@@ -91,7 +100,6 @@ body {
 }
 .rules h2,
 .rules ul li {
-  color: #fff;
   margin: 0.5rem 0;
 }
 .rules ul {
