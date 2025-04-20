@@ -10,7 +10,7 @@ import Hand from './components/Hand';
 import Controls from './components/Controls';
 import './index.css';
 
-// Generic modal for any message
+// Generic modal for messages
 function Modal({ message, onClose }) {
   return (
     <div className="modal-overlay">
@@ -30,8 +30,8 @@ function MainMenu({ onLoad, showModal }) {
     const keys = Object.keys(localStorage)
       .filter(k => k.startsWith('Save_File_'))
       .sort((a, b) => {
-        const na = +a.split('_').pop();
-        const nb = +b.split('_').pop();
+        const na = +a.split('_').pop(),
+              nb = +b.split('_').pop();
         return na - nb;
       });
     setSaves(keys);
@@ -53,6 +53,12 @@ function MainMenu({ onLoad, showModal }) {
     onLoad(key, data);
   };
 
+  const deleteSave = key => {
+    localStorage.removeItem(key);
+    setSaves(saves.filter(s => s !== key));
+    showModal(`Deleted ${key}.`);
+  };
+
   return (
     <div className="main-menu">
       <h1>♣ React Blackjack ♠</h1>
@@ -69,14 +75,22 @@ function MainMenu({ onLoad, showModal }) {
       </div>
 
       <div className="bank">
-        <h2>Load Save</h2>
+        <h2>Load / Delete Save</h2>
         {saves.length ? (
           saves.map(k => {
             const d = JSON.parse(localStorage.getItem(k));
             return (
-              <button key={k} onClick={() => loadSave(k)}>
-                {k} ({d.username}, ${d.balance})
-              </button>
+              <div key={k} className="save-entry">
+                <button onClick={() => loadSave(k)}>
+                  {k} ({d.username}, ${d.balance})
+                </button>
+                <button
+                  className="delete-btn"
+                  onClick={() => deleteSave(k)}
+                >
+                  Delete
+                </button>
+              </div>
             );
           })
         ) : (
@@ -134,7 +148,7 @@ export default function App() {
     document.body.classList.toggle('light-mode', !darkMode);
   }, [darkMode]);
 
-  // Auto-save
+  // Auto-save on balance/username change
   useEffect(() => {
     if (currentSave) {
       localStorage.setItem(
@@ -144,7 +158,7 @@ export default function App() {
     }
   }, [username, balance, currentSave]);
 
-  // If no save, show menu
+  // Place/save loaded
   if (!currentSave) {
     return (
       <>
@@ -183,15 +197,16 @@ export default function App() {
 
   const finishRound = result => {
     if (result === 'Player wins!') {
-      setBalance(b => b + currentBet);
+      setBalance(b => b + currentBet * 2);
     } else if (result === 'Dealer wins!') {
-      // refill only if truly bankrupt
+      // refill only if bankrupt
       if (balance <= 0) {
         showModal("You went bankrupt! Here's $1,000 to continue.");
         setBalance(1000);
       }
+    } else if (result === 'Tie') {
+      setBalance(b => b + currentBet);
     }
-    // Tie: do nothing to balance
     setOver(true);
   };
 
@@ -209,8 +224,7 @@ export default function App() {
 
   const handleStand = () => {
     if (!inProgress) return;
-    let d = [...dealerHand],
-      dDeck = [...deck];
+    let d = [...dealerHand], dDeck = [...deck];
     while (shouldDealerHit(d, playerHand, diff, dDeck)) {
       const [card, ...rest] = dDeck;
       d.push(card);
@@ -220,7 +234,7 @@ export default function App() {
     setDeck(dDeck);
 
     const pVal = getHandValue(playerHand),
-      dVal = getHandValue(d);
+          dVal = getHandValue(d);
     let result =
       dVal > 21 || pVal > dVal
         ? 'Player wins!'
@@ -240,12 +254,12 @@ export default function App() {
           onClose={() => setModalMessage('')}
         />
       )}
-
       <div className="game">
         <button
           className="theme-toggle"
           onClick={() => setDarkMode(d => !d)}
-          aria-label="Toggle theme">
+          aria-label="Toggle theme"
+        >
           {darkMode ? <FaSun /> : <FaMoon />}
         </button>
 
@@ -266,25 +280,14 @@ export default function App() {
           <p><strong>Current Bet:</strong> ${currentBet}</p>
         )}
 
-        <DifficultySelector
-          difficulty={diff}
-          setDifficulty={setDiff}
-        />
+        <DifficultySelector difficulty={diff} setDifficulty={setDiff} />
 
         <div className="tables">
           <Hand cards={playerHand} title="Player" />
-          <Hand
-            cards={dealerHand}
-            title="Dealer"
-            hideHoleCard={!over}
-          />
+          <Hand cards={dealerHand} title="Dealer" hideHoleCard={!over} />
         </div>
 
-        <Controls
-          onHit={handleHit}
-          onStand={handleStand}
-          disabled={!inProgress}
-        />
+        <Controls onHit={handleHit} onStand={handleStand} disabled={!inProgress} />
 
         {message && <h2 className="msg">{message}</h2>}
       </div>
