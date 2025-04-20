@@ -14,14 +14,14 @@ export default function BetForm({ balance, onBet, showModal }) {
       <div className="bet-form">
         <input
           type="number"
-          placeholder="Bet"
+          placeholder="Bet Amount"
           value={amt}
           onChange={e => setAmt(e.target.value)}
           min="1"
           max={balance}
           className="bet-input"
         />
-        <button className="btn-deal" onClick={place}>Deal</button>
+        <button className="btn-deal" onClick={place}>Bet</button>
       </div>
     );
   }
