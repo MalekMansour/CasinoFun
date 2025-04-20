@@ -48,7 +48,7 @@ body.light-mode {
 }
 .card .corner.flip {
   bottom: 4px;
-  right: 4px;
+  right: -28px;
   transform: rotate(180deg);
 }
 .card .center {
