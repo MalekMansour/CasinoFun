@@ -92,13 +92,14 @@ body.light-mode {
 
 /* ─── Main Content ───────────────────────────────────────────────────── */
 .main-content {
-  transition: none;
   padding: 2rem;
+  /* no margin shift when sidebar toggles */
 }
 
 /* ─── Centered Game Container ───────────────────────────────────────── */
 .game-area {
-  max-width: 700px;
+  max-width: 800px;
+  width: 90vw;
   margin: 0 auto;
   transform: scale(1.1);
 }
@@ -106,7 +107,7 @@ body.light-mode {
 /* ─── Layout ─────────────────────────────────────────────────────────── */
 .main-menu,
 .game {
-  max-width: 700px;
+  max-width: 800px;
   margin: auto;
 }
 .tables {
@@ -164,19 +165,47 @@ body.light-mode {
   cursor: not-allowed;
 }
 
-/* ─── Deal Button (Bet Form) ────────────────────────────────────────── */
-.bank button {
-  background: #28a745;
-  color: white;
-  font-size: 1.5rem;
-  padding: 1rem 2rem;
-  border-radius: 8px;
-  border: none;
-  box-shadow: 0 6px 8px rgba(0,0,0,0.3);
-  transition: transform 0.1s ease;
+/* ─── BetForm ───────────────────────────────────────────────────────── */
+.bet-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
 }
-.bank button:hover {
-  transform: scale(1.1);
+.bet-input {
+  width: 120px;
+  padding: 0.6rem 0.8rem;
+  font-size: 1rem;
+  border: 2px solid var(--card-border-color);
+  border-radius: 6px;
+  background: var(--bg-color);
+  color: var(--text-color);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.bet-input:focus {
+  border-color: #4caf50;
+}
+.btn-deal {
+  margin-left: 0.75rem;
+  padding: 0.8rem 1.5rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  background: #4caf50;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  transition: transform 0.1s, background 0.2s;
+}
+.btn-deal:hover {
+  background: #43a047;
+  transform: scale(1.05);
+}
+.btn-deal:active {
+  background: #388e3c;
+  transform: scale(0.98);
 }
 
 /* ─── Difficulty & Message ───────────────────────────────────────────── */
@@ -189,7 +218,7 @@ body.light-mode {
   font-size: 1.25rem;
 }
 
-/* ─── Bank & Betting UI ──────────────────────────────────────────────── */
+/* ─── Bank & Betting UI (legacy) ─────────────────────────────────────── */
 .bank {
   margin-bottom: 1rem;
 }
@@ -233,6 +262,7 @@ body.light-mode {
   cursor: pointer;
 }
 
+/* ─── Save Entry & Delete ───────────────────────────────────────────── */
 .save-entry {
   display: flex;
   align-items: center;
