@@ -9,6 +9,7 @@ body {
   font-family: sans-serif;
   text-align: center;
   padding: 2rem;
+  padding-left: 260px; /* space for sidebar */
 }
 body.light-mode {
   --bg-color: #fff;
@@ -63,6 +64,77 @@ body.light-mode {
   border: 2px solid #444;
 }
 
+/* ─── Sidebar ─────────────────────────────────────────────────────────── */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 240px;
+  background: #1f1f1f;
+  border-right: 2px solid var(--card-border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease;
+  z-index: 100;
+}
+.sidebar.closed {
+  transform: translateX(-100%);
+}
+.sidebar .user-name {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  color: var(--text-color);
+}
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+.sidebar ul li {
+  width: 100%;
+}
+.sidebar ul li a {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  width: 100%;
+  color: var(--text-color);
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+.sidebar ul li a:hover {
+  background: rgba(255,255,255,0.1);
+}
+.sidebar .logout-btn {
+  margin-top: auto;
+  margin-bottom: 1rem;
+  background: #dc3545;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.sidebar .toggle-btn {
+  position: absolute;
+  top: 1rem;
+  right: -1.5rem;
+  background: var(--bg-color);
+  border: 2px solid var(--card-border-color);
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
 /* ─── Controls & Buttons ────────────────────────────────────────────── */
 .controls button,
 .bank button {
@@ -75,6 +147,24 @@ body.light-mode {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* ─── Deal Button Styling ────────────────────────────────────────────── */
+.controls button#deal {
+  background-color: #28a745;
+  color: #fff;
+  font-size: 1.25rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.controls button#deal:hover {
+  background-color: #218838;
+  transform: scale(1.05);
+}
+
 .difficulty label {
   margin: 0 0.5rem;
   cursor: pointer;
