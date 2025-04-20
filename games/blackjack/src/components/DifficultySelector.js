@@ -3,33 +3,17 @@ import React from 'react';
 export default function DifficultySelector({ difficulty, setDifficulty }) {
   return (
     <div className="difficulty">
-      <label>
-        <input
-          type="radio"
-          name="diff"
-          value="easy"
-          checked={difficulty === 'easy'}
-          onChange={e => setDifficulty(e.target.value)}
-        /> Easy
-      </label>
-      <label>
-        <input
-          type="radio"
-          name="diff"
-          value="medium"
-          checked={difficulty === 'medium'}
-          onChange={e => setDifficulty(e.target.value)}
-        /> Medium
-      </label>
-      <label>
-        <input
-          type="radio"
-          name="diff"
-          value="hard"
-          checked={difficulty === 'hard'}
-          onChange={e => setDifficulty(e.target.value)}
-        /> Hard
-      </label>
+      {['easy','medium','hard'].map(level => (
+        <label key={level}>
+          <input
+            type="radio"
+            name="diff"
+            value={level}
+            checked={difficulty === level}
+            onChange={e => setDifficulty(e.target.value)}
+          /> {level.charAt(0).toUpperCase() + level.slice(1)}
+        </label>
+      ))}
     </div>
   );
 }
