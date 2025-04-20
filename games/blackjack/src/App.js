@@ -10,46 +10,168 @@ import Hand from './components/Hand';
 import Controls from './components/Controls';
 import './index.css';
 
+function MainMenu({ onLoad }) {
+  const [usernameInput, setUsernameInput] = useState('');
+  const [saves, setSaves] = useState([]);
+
+  useEffect(() => {
+    const keys = Object.keys(localStorage)
+      .filter(k => k.startsWith('Save_File_'))
+      .sort((a, b) => {
+        const na = +a.split('_').pop(),
+              nb = +b.split('_').pop();
+        return na - nb;
+      });
+    setSaves(keys);
+  }, []);
+
+  const createSave = () => {
+    const name = usernameInput.trim();
+    if (!name) return alert('Enter a username.');
+    const indices = saves.map(k => +k.split('_').pop());
+    const next = indices.length ? Math.max(...indices) + 1 : 1;
+    const key = `Save_File_${next}`;
+    const data = { username: name, balance: 1000 };
+    localStorage.setItem(key, JSON.stringify(data));
+    onLoad(key, data);
+  };
+
+  const loadSave = key => {
+    const data = JSON.parse(localStorage.getItem(key));
+    onLoad(key, data);
+  };
+
+  return (
+    <div className="main-menu">
+      <h1>♣ React Blackjack ♠</h1>
+
+      <div className="bank">
+        <h2>Create New Save</h2>
+        <input
+          type="text"
+          placeholder="Username"
+          value={usernameInput}
+          onChange={e => setUsernameInput(e.target.value)}
+        />
+        <button onClick={createSave}>Create</button>
+      </div>
+
+      <div className="bank">
+        <h2>Load Save</h2>
+        {saves.length ? (
+          saves.map(k => {
+            const d = JSON.parse(localStorage.getItem(k));
+            return (
+              <button key={k} onClick={() => loadSave(k)}>
+                {k} ({d.username}, ${d.balance})
+              </button>
+            );
+          })
+        ) : (
+          <p>No saves found.</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function BetForm({ balance, onBet }) {
+  const [amt, setAmt] = useState('');
+  const place = () => {
+    const b = parseInt(amt, 10);
+    if (!b || b <= 0) return alert('Enter valid bet.');
+    if (b > balance) return alert('Bet exceeds balance.');
+    onBet(b);
+    setAmt('');
+  };
+  return (
+    <>
+      <input
+        type="number"
+        placeholder="Bet"
+        value={amt}
+        onChange={e => setAmt(e.target.value)}
+        min="1"
+        max={balance}
+      />
+      <button onClick={place}>Deal</button>
+    </>
+  );
+}
+
 export default function App() {
   const [darkMode, setDarkMode] = useState(true);
+  const [currentSave, setCurrentSave] = useState(null);
+  const [username, setUsername] = useState('');
+  const [balance, setBalance] = useState(0);
+
   const [deck, setDeck] = useState([]);
   const [playerHand, setPlayerHand] = useState([]);
   const [dealerHand, setDealerHand] = useState([]);
   const [diff, setDiff] = useState('medium');
   const [message, setMessage] = useState('');
   const [over, setOver] = useState(true);
-  const [balance, setBalance] = useState(100);
-  const [bet, setBet] = useState('');
-  const [betPlaced, setBetPlaced] = useState(false);
 
-  // toggle body class for theme
+  const [currentBet, setCurrentBet] = useState(0);
+  const [showBankruptModal, setShowBankruptModal] = useState(false);
+
+  // Apply dark/light mode to body
   useEffect(() => {
     document.body.classList.toggle('light-mode', !darkMode);
   }, [darkMode]);
 
-  const inProgress = betPlaced && !over;
+  // Auto‑save on balance/username change
+  useEffect(() => {
+    if (currentSave) {
+      localStorage.setItem(
+        currentSave,
+        JSON.stringify({ username, balance })
+      );
+    }
+  }, [balance, username, currentSave]);
 
-  function addFunds() {
-    const input = prompt('Enter amount to add:');
-    const amt = parseInt(input, 10);
-    if (!amt || amt <= 0) return alert('Invalid amount.');
-    setBalance(b => b + amt);
+  // If no save yet, show menu
+  if (!currentSave) {
+    return (
+      <MainMenu
+        onLoad={(key, data) => {
+          setCurrentSave(key);
+          setUsername(data.username);
+          setBalance(data.balance);
+          setOver(true);
+          setMessage('');
+        }}
+      />
+    );
   }
 
-  function placeBet() {
-    const b = parseInt(bet, 10);
-    if (!b || b <= 0) return alert('Enter a valid bet.');
-    if (b > balance) return alert('Bet exceeds balance.');
-    setBetPlaced(true);
-    setOver(false);
-    setMessage('');
+  const inProgress = !over;
+
+  const placeBet = betAmt => {
+    setCurrentBet(betAmt);
+    setBalance(b => b - betAmt);
     const { deck, playerHand, dealerHand } = dealInitialHands();
     setDeck(deck);
     setPlayerHand(playerHand);
     setDealerHand(dealerHand);
-  }
+    setOver(false);
+    setMessage('');
+  };
 
-  function handleHit() {
+  const finishRound = result => {
+    if (result === 'Player wins!') {
+      setBalance(b => b + currentBet);
+    } else if (result === 'Dealer wins!') {
+      // Only refill if you've actually hit zero
+      if (balance <= 0) {
+        setShowBankruptModal(true);
+        setBalance(1000);
+      }
+    }
+    setOver(true);
+  };
+
+  const handleHit = () => {
     if (!inProgress) return;
     const [card, ...rest] = deck;
     const newHand = [...playerHand, card];
@@ -57,13 +179,14 @@ export default function App() {
     setPlayerHand(newHand);
     if (getHandValue(newHand) > 21) {
       setMessage('Busted! Dealer wins.');
-      endRound('Dealer wins!');
+      finishRound('Dealer wins!');
     }
-  }
+  };
 
-  function handleStand() {
+  const handleStand = () => {
     if (!inProgress) return;
-    let d = [...dealerHand], dDeck = [...deck];
+    let d = [...dealerHand];
+    let dDeck = [...deck];
     while (shouldDealerHit(d, playerHand, diff, dDeck)) {
       const [card, ...rest] = dDeck;
       d.push(card);
@@ -72,63 +195,65 @@ export default function App() {
     setDealerHand(d);
     setDeck(dDeck);
 
-    const pVal = getHandValue(playerHand);
-    const dVal = getHandValue(d);
-    let result;
-    if (dVal > 21 || pVal > dVal) result = 'Player wins!';
-    else if (pVal === dVal) result = 'Push!';
-    else result = 'Dealer wins!';
-    setMessage(result);
-    endRound(result);
-  }
+    const pVal = getHandValue(playerHand),
+          dVal = getHandValue(d);
+    let result =
+      dVal > 21 || pVal > dVal
+        ? 'Player wins!'
+        : pVal === dVal
+        ? 'Push!'
+        : 'Dealer wins!';
 
-  function endRound(result) {
-    const b = parseInt(bet, 10);
-    if (result === 'Player wins!') setBalance(bal => bal + b);
-    else if (result === 'Dealer wins!') setBalance(bal => bal - b);
-    setOver(true);
-    setBetPlaced(false);
-  }
+    setMessage(result);
+    finishRound(result);
+  };
 
   return (
     <div className="game">
-      {/* theme toggle */}
+      {/* Dark/Light toggle */}
       <button
         className="theme-toggle"
-        onClick={() => setDarkMode(d => !d)}
-        aria-label="Toggle dark/light mode"
+        onClick={() => setDarkMode(m => !m)}
+        aria-label="Toggle theme"
       >
         {darkMode ? <FaSun /> : <FaMoon />}
       </button>
 
       <h1>♣ React Blackjack ♠</h1>
+      <p><strong>User:</strong> {username}</p>
+      <p><strong>Balance:</strong> ${balance}</p>
 
-      <div className="bank">
-        <p><strong>Balance:</strong> ${balance}</p>
-        <button onClick={addFunds}>Add Funds</button>
-      </div>
+      {/* Bankruptcy modal */}
+      {showBankruptModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <p>You went bankrupt! Here’s $1,000 to continue.</p>
+            <button onClick={() => setShowBankruptModal(false)}>
+              OK
+            </button>
+          </div>
+        </div>
+      )}
 
+      {/* Bet form */}
       {!inProgress ? (
         <div className="bank">
-          <input
-            type="number"
-            placeholder="Your bet"
-            value={bet}
-            onChange={e => setBet(e.target.value)}
-            min="1"
-            max={balance}
-          />
-          <button onClick={placeBet}>Place Bet & Deal</button>
+          <h2>Place your bet</h2>
+          <BetForm balance={balance} onBet={placeBet} />
         </div>
       ) : (
-        <p><strong>Current Bet:</strong> ${bet}</p>
+        <p><strong>Current Bet:</strong> ${currentBet}</p>
       )}
 
       <DifficultySelector difficulty={diff} setDifficulty={setDiff} />
 
       <div className="tables">
         <Hand cards={playerHand} title="Player" />
-        <Hand cards={dealerHand} title="Dealer" hideHoleCard={!over} />
+        <Hand
+          cards={dealerHand}
+          title="Dealer"
+          hideHoleCard={!over}
+        />
       </div>
 
       <Controls
