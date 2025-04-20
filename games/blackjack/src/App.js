@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { FaSun, FaMoon } from 'react-icons/fa';
 import {
   dealInitialHands,
   getHandValue,
@@ -10,15 +11,21 @@ import Controls from './components/Controls';
 import './index.css';
 
 export default function App() {
+  const [darkMode, setDarkMode] = useState(true);
   const [deck, setDeck] = useState([]);
   const [playerHand, setPlayerHand] = useState([]);
   const [dealerHand, setDealerHand] = useState([]);
   const [diff, setDiff] = useState('medium');
   const [message, setMessage] = useState('');
-  const [over, setOver] = useState(true);       // true means no round in progress
+  const [over, setOver] = useState(true);
   const [balance, setBalance] = useState(100);
   const [bet, setBet] = useState('');
   const [betPlaced, setBetPlaced] = useState(false);
+
+  // toggle body class for theme
+  useEffect(() => {
+    document.body.classList.toggle('light-mode', !darkMode);
+  }, [darkMode]);
 
   const inProgress = betPlaced && !over;
 
@@ -36,7 +43,6 @@ export default function App() {
     setBetPlaced(true);
     setOver(false);
     setMessage('');
-    // deal
     const { deck, playerHand, dealerHand } = dealInitialHands();
     setDeck(deck);
     setPlayerHand(playerHand);
@@ -49,7 +55,6 @@ export default function App() {
     const newHand = [...playerHand, card];
     setDeck(rest);
     setPlayerHand(newHand);
-
     if (getHandValue(newHand) > 21) {
       setMessage('Busted! Dealer wins.');
       endRound('Dealer wins!');
@@ -67,8 +72,8 @@ export default function App() {
     setDealerHand(d);
     setDeck(dDeck);
 
-    const pVal = getHandValue(playerHand),
-          dVal = getHandValue(d);
+    const pVal = getHandValue(playerHand);
+    const dVal = getHandValue(d);
     let result;
     if (dVal > 21 || pVal > dVal) result = 'Player wins!';
     else if (pVal === dVal) result = 'Push!';
@@ -78,18 +83,25 @@ export default function App() {
   }
 
   function endRound(result) {
-    // adjust balance
     const b = parseInt(bet, 10);
     if (result === 'Player wins!') setBalance(bal => bal + b);
     else if (result === 'Dealer wins!') setBalance(bal => bal - b);
-    // finish round
     setOver(true);
     setBetPlaced(false);
   }
 
   return (
     <div className="game">
-      <h1>♣ Blackjack ♠</h1>
+      {/* theme toggle */}
+      <button
+        className="theme-toggle"
+        onClick={() => setDarkMode(d => !d)}
+        aria-label="Toggle dark/light mode"
+      >
+        {darkMode ? <FaSun /> : <FaMoon />}
+      </button>
+
+      <h1>♣ React Blackjack ♠</h1>
 
       <div className="bank">
         <p><strong>Balance:</strong> ${balance}</p>
