@@ -141,24 +141,3 @@ body.light-mode {
   color: white;
   cursor: pointer;
 }
-
-/* ─── Modal ─────────────────────────────────────────────────────────── */
-.modal-overlay {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 1000;
-}
-.modal-content {
-  background: var(--bg-color);
-  color: var(--text-color);
-  padding: 2rem;
-  border-radius: 8px;
-  text-align: center;
-}
-.modal-content button {
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-}
