@@ -1,7 +1,4 @@
-# Survival-Game
- A survival game on python
+# CasinoFun
 
-The Goal of the game is to survive as long as psosible or to create a living and a buisness.
-
-There will be a collection of games.
-There will be a tetris game.
+The point of this react website is to have a bunch of games made on react.
+Currently I am working on Blackjack.
