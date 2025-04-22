@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaSun, FaChevronLeft, FaChevronRight, FaGamepad } from 'react-icons/fa';
 import { IoMdMoon } from 'react-icons/io';
-import { FaVolumeHigh, FaVolumeXmark } from 'react-icons/fa6';
 import { HiVolumeUp, HiVolumeOff } from "react-icons/hi";
 import bgMusic from './assets/background.mp3';
 import {
