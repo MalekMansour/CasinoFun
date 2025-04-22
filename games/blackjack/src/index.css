@@ -305,7 +305,9 @@ body.light-mode {
 .main-menu-logo {
   display: block;
   margin: 2rem auto 1rem;
-  max-width: 300px;
+  max-width: 600px;
+  margin-Bottom: -180px;
+  margin-Top: -100px;
 }
 
 .main-menu-buttons {
@@ -316,12 +318,13 @@ body.light-mode {
 }
 
 .menu-btn {
-  background-color: pink;
+  background-color: #F7374F;
   border: none;
   padding: 0.75rem 2rem;
   font-size: 1.25rem;
   border-radius: 8px;
   cursor: pointer;
+  width: 30%;  
 }
 
 /* --- Popup panel for New/Load --- */
@@ -362,8 +365,8 @@ body.light-mode {
 }
 
 .delete-btn {
-  background: transparent;
+  background: red;
   border: none;
-  color: red;
+  color: #fff;
   cursor: pointer;
 }
