@@ -5,7 +5,6 @@ import {
   getHandValue,
   shouldDealerHit
 } from './utils/game';
-import DifficultySelector from './components/DifficultySelector';
 import Hand from './components/Hand';
 import Controls from './components/Controls';
 import BetForm from './components/BetForm';
@@ -51,12 +50,14 @@ export default function App() {
   const [deck, setDeck] = useState([]);
   const [playerHand, setPlayerHand] = useState([]);
   const [dealerHand, setDealerHand] = useState([]);
-  const [diff, setDiff] = useState('medium');
   const [message, setMessage] = useState('');
   const [over, setOver] = useState(true);
   const [currentBet, setCurrentBet] = useState(0);
   const [modalMessage, setModalMessage] = useState('');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  // always use medium difficulty
+  const diff = 'medium';
 
   const showModal = msg => setModalMessage(msg);
 
@@ -138,7 +139,11 @@ export default function App() {
     setDeck(dDeck);
 
     const pVal = getHandValue(playerHand), dVal = getHandValue(d);
-    const result = dVal > 21 || pVal > dVal ? 'Player wins!' : pVal === dVal ? 'Tie' : 'Dealer wins!';
+    const result = dVal > 21 || pVal > dVal
+      ? 'Player wins!'
+      : pVal === dVal
+        ? 'Tie'
+        : 'Dealer wins!';
     setMessage(result);
     finishRound(result);
   };
@@ -155,12 +160,21 @@ export default function App() {
   return (
     <>
       {modalMessage && <Modal message={modalMessage} onClose={() => setModalMessage('')} />}
-      <Sidebar username={username} collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(c => !c)} onLogout={handleLogout} />
+      <Sidebar
+        username={username}
+        collapsed={sidebarCollapsed}
+        onToggle={() => setSidebarCollapsed(c => !c)}
+        onLogout={handleLogout}
+      />
       <div className="main-content">
         <header className="top-banner">
           <div className="balance-container">Balance: ${balance}</div>
-          <button className="theme-toggle" onClick={() => setDarkMode(d => !d)} aria-label="Toggle theme">
-            {darkMode ? <FaSun/> : <FaMoon/>}
+          <button
+            className="theme-toggle"
+            onClick={() => setDarkMode(d => !d)}
+            aria-label="Toggle theme"
+          >
+            {darkMode ? <FaSun /> : <FaMoon />}
           </button>
         </header>
         <section className="game-area">
@@ -169,7 +183,6 @@ export default function App() {
           ) : (
             <div className="current-bet">Bet: ${currentBet}</div>
           )}
-          <DifficultySelector difficulty={diff} setDifficulty={setDiff} />
           <div className="tables">
             <Hand cards={playerHand} title="Player" />
             <Hand cards={dealerHand} title="Dealer" hideHoleCard={!over} />
