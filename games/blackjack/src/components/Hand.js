@@ -1,5 +1,5 @@
 import React from 'react';
-import Card from './Card';
+import Card from 'Card';
 import { getHandValue } from '../utils/game';
 
 export default function Hand({ cards, title, hideHoleCard=false }) {
