@@ -11,7 +11,7 @@ body {
   transition: background 0.3s, color 0.3s;
 }
 body.light-mode {
-  --bg-color: #F5EEDD;
+  --bg-color: #2B414F;
   --text-color: #000;
   --card-border-color: #000;
 }
@@ -28,7 +28,7 @@ body.light-mode {
   transform: translateX(0);
   transition: transform 0.3s ease;
   z-index: 100;
-  color: var(--text-color);
+  color: #fff;
   padding-top: 1rem;
 }
 .sidebar.collapsed {
@@ -38,8 +38,9 @@ body.light-mode {
   position: absolute;
   top: 1rem;
   right: -32px;
-  background: var(--bg-color);
-  border: 2px solid var(--card-border-color);
+  background: #1A2C38;
+  border: 2px solid ;
+  color: #fff;              
   border-radius: 10%;
   width: 32px;
   height: 32px;
@@ -61,7 +62,7 @@ body.light-mode {
 .sidebar .sb-games .sb-item {
   background: none;
   border: none;
-  color: var(--text-color);
+  color: #fff;
   padding: 0.75rem 1rem;
   cursor: pointer;
   display: flex;
