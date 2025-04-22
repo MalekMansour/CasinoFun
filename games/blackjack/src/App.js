@@ -1,5 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { FaSun, FaMoon, FaChevronLeft, FaChevronRight, FaGamepad } from 'react-icons/fa';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  FaSun, FaMoon,
+  FaChevronLeft, FaChevronRight,
+  FaGamepad,
+  FaMusic, FaMusicSlash
+} from 'react-icons/fa';
+import bgMusic from './assets/background.mp3';      // your music file
 import {
   dealInitialHands,
   getHandValue,
@@ -31,7 +37,7 @@ function Sidebar({ username, collapsed, onToggle, onLogout }) {
       {!collapsed && <div className="sb-user">{username}</div>}
       <nav className="sb-games">
         <button className="sb-item">
-          <FaGamepad className="sb-icon"/> 
+          <FaGamepad className="sb-icon"/>
           {!collapsed && 'Blackjack'}
         </button>
       </nav>
@@ -44,6 +50,9 @@ function Sidebar({ username, collapsed, onToggle, onLogout }) {
 
 export default function App() {
   const [darkMode, setDarkMode] = useState(true);
+  const [musicOn, setMusicOn] = useState(false);
+  const audioRef = useRef(new Audio(bgMusic));
+
   const [currentSave, setCurrentSave] = useState(null);
   const [username, setUsername] = useState('');
   const [balance, setBalance] = useState(0);
@@ -56,8 +65,19 @@ export default function App() {
   const [modalMessage, setModalMessage] = useState('');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  // always use medium difficulty
+  // AI difficulty always medium
   const diff = 'medium';
+
+  // configure music
+  useEffect(() => {
+    audioRef.current.loop = true;
+  }, []);
+
+  const toggleMusic = () => {
+    if (musicOn) audioRef.current.pause();
+    else audioRef.current.play();
+    setMusicOn(on => !on);
+  };
 
   const showModal = msg => setModalMessage(msg);
 
@@ -73,6 +93,10 @@ export default function App() {
       );
     }
   }, [username, balance, currentSave]);
+
+  const handleNewGame = () => showModal('New Game clicked');
+  const handleLoadGame = () => showModal('Load Game clicked');
+  const handleExit = () => window.close();
 
   const handleLoad = (key, data) => {
     setCurrentSave(key);
@@ -104,11 +128,9 @@ export default function App() {
   const finishRound = result => {
     if (result === 'Player wins!') {
       setBalance(b => b + currentBet * 2);
-    } else if (result === 'Dealer wins!') {
-      if (balance <= 0) {
-        showModal("You went bankrupt! Here's $1,000 to continue.");
-        setBalance(1000);
-      }
+    } else if (result === 'Dealer wins!' && balance <= 0) {
+      showModal("You went bankrupt! Here's $1,000 to continue.");
+      setBalance(1000);
     } else if (result === 'Tie') {
       setBalance(b => b + currentBet);
     }
@@ -148,10 +170,15 @@ export default function App() {
     finishRound(result);
   };
 
+  // show main menu if no save loaded
   if (!currentSave) {
     return (
       <>
-        <MainMenu onLoad={handleLoad} showModal={showModal} />
+        <MainMenu
+          onNewGame={handleNewGame}
+          onLoadGame={handleLoadGame}
+          onExit={handleExit}
+        />
         {modalMessage && <Modal message={modalMessage} onClose={() => setModalMessage('')} />}
       </>
     );
@@ -160,36 +187,51 @@ export default function App() {
   return (
     <>
       {modalMessage && <Modal message={modalMessage} onClose={() => setModalMessage('')} />}
+
       <Sidebar
         username={username}
         collapsed={sidebarCollapsed}
         onToggle={() => setSidebarCollapsed(c => !c)}
         onLogout={handleLogout}
       />
+
       <div className="main-content">
         <header className="top-banner">
           <div className="balance-container">Balance: ${balance}</div>
-          <button
-            className="theme-toggle"
-            onClick={() => setDarkMode(d => !d)}
-            aria-label="Toggle theme"
-          >
-            {darkMode ? <FaSun /> : <FaMoon />}
-          </button>
+          <div className="top-controls">
+            <button
+              className="theme-toggle"
+              onClick={() => setDarkMode(d => !d)}
+              aria-label="Toggle theme"
+            >
+              {darkMode ? <FaSun /> : <FaMoon />}
+            </button>
+            <button
+              className="music-toggle"
+              onClick={toggleMusic}
+              aria-label="Toggle music"
+            >
+              {musicOn ? <FaMusicSlash /> : <FaMusic />}
+            </button>
+          </div>
         </header>
+
         <section className="game-area">
           {!inProgress ? (
             <BetForm balance={balance} onBet={placeBet} showModal={showModal} />
           ) : (
             <div className="current-bet">Bet: ${currentBet}</div>
           )}
+
           <div className="tables">
             <Hand cards={playerHand} title="Player" />
             <Hand cards={dealerHand} title="Dealer" hideHoleCard={!over} />
           </div>
+
           <div className="controls-container">
             <Controls onHit={handleHit} onStand={handleStand} disabled={!inProgress} />
           </div>
+
           {message && <div className="round-msg">{message}</div>}
         </section>
       </div>
