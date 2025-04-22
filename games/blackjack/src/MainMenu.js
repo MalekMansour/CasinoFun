@@ -1,22 +1,15 @@
-// MainMenu.js
+// src/MainMenu.js
 import React, { useState, useEffect } from 'react';
+import logo from './assets/logo.png';
 import './index.css';
-
-function Modal({ message, onClose }) {
-  return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <p>{message}</p>
-        <button className="modal-ok" onClick={onClose}>OK</button>
-      </div>
-    </div>
-  );
-}
 
 export default function MainMenu({ onLoad, showModal }) {
   const [usernameInput, setUsernameInput] = useState('');
   const [saves, setSaves] = useState([]);
+  const [showNew, setShowNew] = useState(false);
+  const [showLoad, setShowLoad] = useState(false);
 
+  // load save keys from localStorage
   useEffect(() => {
     const keys = Object.keys(localStorage)
       .filter(k => k.startsWith('Save_File_'))
@@ -27,6 +20,20 @@ export default function MainMenu({ onLoad, showModal }) {
     setSaves(keys);
   }, []);
 
+  const openNew = () => {
+    setUsernameInput('');
+    setShowNew(true);
+    setShowLoad(false);
+  };
+  const openLoad = () => {
+    setShowLoad(true);
+    setShowNew(false);
+  };
+  const closePanels = () => {
+    setShowNew(false);
+    setShowLoad(false);
+  };
+
   const createSave = () => {
     const name = usernameInput.trim();
     if (!name) return showModal('Enter a username.');
@@ -36,6 +43,7 @@ export default function MainMenu({ onLoad, showModal }) {
     const data = { username: name, balance: 1000 };
     localStorage.setItem(key, JSON.stringify(data));
     onLoad(key, data);
+    // after onLoad, App swaps to the game screen
   };
 
   const loadSave = key => {
@@ -51,40 +59,62 @@ export default function MainMenu({ onLoad, showModal }) {
 
   return (
     <div className="main-menu">
-      <h1>♣ Blackjack ♠</h1>
-      <div className="bank">
-        <h2>Create New Save</h2>
-        <input
-          type="text"
-          placeholder="Username"
-          value={usernameInput}
-          onChange={e => setUsernameInput(e.target.value)}
-        />
-        <button onClick={createSave}>Create</button>
+      {/* Logo */}
+      <img src={logo} alt="App Logo" className="main-menu-logo" />
+
+      {/* Big pink buttons */}
+      <div className="main-menu-buttons">
+        <button className="menu-btn" onClick={openNew}>New Game</button>
+        <button className="menu-btn" onClick={openLoad}>Load Game</button>
+        <button className="menu-btn" onClick={() => window.close()}>Exit</button>
       </div>
-      <div className="bank">
-        <h2>Load Save</h2>
-        {saves.length ? (
-          saves.map(k => {
-            const d = JSON.parse(localStorage.getItem(k));
-            return (
-              <div key={k} className="save-entry">
-                <button onClick={() => loadSave(k)}>
-                  {k} ({d.username}, ${d.balance})
-                </button>
-                <button
-                  className="delete-btn"
-                  onClick={() => deleteSave(k)}
-                >
-                  Delete
-                </button>
-              </div>
-            );
-          })
-        ) : (
-          <p>No saves found.</p>
-        )}
-      </div>
+
+      {/* New Game panel */}
+      {showNew && (
+        <div className="menu-panel">
+          <h2>Create New Save</h2>
+          <input
+            type="text"
+            placeholder="Username"
+            value={usernameInput}
+            onChange={e => setUsernameInput(e.target.value)}
+          />
+          <div className="panel-buttons">
+            <button onClick={createSave}>Create</button>
+            <button onClick={closePanels}>Cancel</button>
+          </div>
+        </div>
+      )}
+
+      {/* Load Game panel */}
+      {showLoad && (
+        <div className="menu-panel">
+          <h2>Load Save</h2>
+          {saves.length ? (
+            saves.map(k => {
+              const d = JSON.parse(localStorage.getItem(k));
+              return (
+                <div key={k} className="save-entry">
+                  <button onClick={() => loadSave(k)}>
+                    {k} ({d.username}, ${d.balance})
+                  </button>
+                  <button
+                    className="delete-btn"
+                    onClick={() => deleteSave(k)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              );
+            })
+          ) : (
+            <p>No saves found.</p>
+          )}
+          <div className="panel-buttons">
+            <button onClick={closePanels}>Cancel</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
