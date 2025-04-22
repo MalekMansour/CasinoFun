@@ -1,11 +1,10 @@
+// src/App.js
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  FaSun, FaMoon,
-  FaChevronLeft, FaChevronRight,
-  FaGamepad,
-  FaMusic, FaMusicSlash
-} from 'react-icons/fa';
-import bgMusic from './assets/background.mp3';      // your music file
+import { FaSun, FaChevronLeft, FaChevronRight, FaGamepad } from 'react-icons/fa';
+import { IoMdMoon } from 'react-icons/io';
+import { FaVolumeHigh, FaVolumeXmark } from 'react-icons/fa6';
+import { HiVolumeUp, HiVolumeOff } from "react-icons/hi";
+import bgMusic from './assets/background.mp3';
 import {
   dealInitialHands,
   getHandValue,
@@ -65,10 +64,9 @@ export default function App() {
   const [modalMessage, setModalMessage] = useState('');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  // AI difficulty always medium
-  const diff = 'medium';
+  const diff = 'medium'; // AI difficulty always medium
 
-  // configure music
+  // loop background music
   useEffect(() => {
     audioRef.current.loop = true;
   }, []);
@@ -81,10 +79,12 @@ export default function App() {
 
   const showModal = msg => setModalMessage(msg);
 
+  // dark/light mode
   useEffect(() => {
     document.body.classList.toggle('light-mode', !darkMode);
   }, [darkMode]);
 
+  // persist save metadata
   useEffect(() => {
     if (currentSave) {
       localStorage.setItem(
@@ -94,10 +94,7 @@ export default function App() {
     }
   }, [username, balance, currentSave]);
 
-  const handleNewGame = () => showModal('New Game clicked');
-  const handleLoadGame = () => showModal('Load Game clicked');
-  const handleExit = () => window.close();
-
+  // load a save into play
   const handleLoad = (key, data) => {
     setCurrentSave(key);
     setUsername(data.username);
@@ -106,12 +103,14 @@ export default function App() {
     setMessage('');
   };
 
+  // logout back to main menu
   const handleLogout = () => {
     setCurrentSave(null);
     setUsername('');
     setBalance(0);
   };
 
+  // game in-progress flag
   const inProgress = !over;
 
   const placeBet = betAmt => {
@@ -170,23 +169,24 @@ export default function App() {
     finishRound(result);
   };
 
-  // show main menu if no save loaded
+  // show MainMenu when nothing is loaded
   if (!currentSave) {
     return (
       <>
-        <MainMenu
-          onNewGame={handleNewGame}
-          onLoadGame={handleLoadGame}
-          onExit={handleExit}
-        />
-        {modalMessage && <Modal message={modalMessage} onClose={() => setModalMessage('')} />}
+        <MainMenu onLoad={handleLoad} showModal={showModal} />
+        {modalMessage && (
+          <Modal message={modalMessage} onClose={() => setModalMessage('')} />
+        )}
       </>
     );
   }
 
+  // game screen
   return (
     <>
-      {modalMessage && <Modal message={modalMessage} onClose={() => setModalMessage('')} />}
+      {modalMessage && (
+        <Modal message={modalMessage} onClose={() => setModalMessage('')} />
+      )}
 
       <Sidebar
         username={username}
@@ -204,14 +204,14 @@ export default function App() {
               onClick={() => setDarkMode(d => !d)}
               aria-label="Toggle theme"
             >
-              {darkMode ? <FaSun /> : <FaMoon />}
+              {darkMode ? <FaSun /> : <IoMdMoon />}
             </button>
             <button
               className="music-toggle"
               onClick={toggleMusic}
               aria-label="Toggle music"
             >
-              {musicOn ? <FaMusicSlash /> : <FaMusic />}
+              {musicOn ? <HiVolumeOff /> : <HiVolumeUp />}
             </button>
           </div>
         </header>
