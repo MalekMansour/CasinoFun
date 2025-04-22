@@ -1,6 +1,6 @@
 /* ─── Theme variables ───────────────────────────────────────────────── */
 body {
-  --bg-color: #0d1f34;
+  --bg-color: #0F212E;
   --text-color: #fff;
   --card-border-color: #fff;
 
@@ -23,7 +23,7 @@ body.light-mode {
   left: 0;
   bottom: 0;
   width: 240px;
-  background: #1f1f1f;
+  background: #1A2C38;
   box-shadow: 2px 0 8px rgba(0,0,0,0.5);
   transform: translateX(0);
   transition: transform 0.3s ease;
