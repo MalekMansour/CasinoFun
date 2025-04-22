@@ -204,14 +204,14 @@ export default function App() {
               onClick={() => setDarkMode(d => !d)}
               aria-label="Toggle theme"
             >
-              {darkMode ? <FaSun /> : <IoMdMoon />}
+              {darkMode ? <IoMdMoon /> :  <FaSun /> }
             </button>
             <button
               className="music-toggle"
               onClick={toggleMusic}
               aria-label="Toggle music"
             >
-              {musicOn ? <HiVolumeOff /> : <HiVolumeUp />}
+              {musicOn ? <HiVolumeUp /> : <HiVolumeOff /> }
             </button>
           </div>
         </header>
