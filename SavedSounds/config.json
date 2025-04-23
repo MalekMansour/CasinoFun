@@ -9,7 +9,7 @@
     "1": "Shocked - Sound Effect (HD).mp3"
   },
   "use_mic": true,
-  "route_device": "Speakers 1 (Realtek HD Audio output with SST)",
-  "play_volume": 100.0,
-  "mic_input_device": "Microphone (Realtek(R) Audio)"
+  "route_device": "CABLE Input (VB-Audio Virtual C",
+  "play_volume": 44.1108545034642,
+  "vm_mode": true
 }
