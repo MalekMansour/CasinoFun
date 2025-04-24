@@ -1,17 +1,15 @@
+// src/App.js
 import React, { useState, useEffect, useRef } from 'react';
-import { FaSun, FaChevronLeft, FaChevronRight, FaGamepad } from 'react-icons/fa';
+import { FaSun, FaChevronLeft, FaChevronRight, FaGamepad, FaCircle } from 'react-icons/fa';
 import { IoMdMoon } from 'react-icons/io';
-import { HiVolumeUp, HiVolumeOff } from "react-icons/hi";
+import { HiVolumeUp, HiVolumeOff } from 'react-icons/hi';
 import bgMusic from './assets/background.mp3';
-import {
-  dealInitialHands,
-  getHandValue,
-  shouldDealerHit
-} from './utils/game';
+import { dealInitialHands, getHandValue, shouldDealerHit } from './utils/game';
 import Hand from './components/Hand';
 import Controls from './components/Controls';
 import BetForm from './components/BetForm';
 import MainMenu from './MainMenu';
+import Plinko from './plinko/plinko';    
 import './index.css';
 
 function Modal({ message, onClose }) {
@@ -25,21 +23,31 @@ function Modal({ message, onClose }) {
   );
 }
 
-function Sidebar({ username, collapsed, onToggle, onLogout }) {
+function Sidebar({ username, collapsed, onToggle, onLogout, game, setGame }) {
   return (
     <div className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
       <button className="toggle-btn" onClick={onToggle}>
-        {collapsed ? <FaChevronRight/> : <FaChevronLeft/>}
+        {collapsed ? <FaChevronRight /> : <FaChevronLeft />}
       </button>
       {!collapsed && <div className="sb-user">{username}</div>}
       <nav className="sb-games">
-        <button className="sb-item">
-          <FaGamepad className="sb-icon"/>
+        <button
+          className={`sb-item ${game === 'blackjack' ? 'active' : ''}`}
+          onClick={() => setGame('blackjack')}
+        >
+          <FaGamepad className="sb-icon" />
           {!collapsed && 'Blackjack'}
+        </button>
+        <button
+          className={`sb-item ${game === 'plinko' ? 'active' : ''}`}
+          onClick={() => setGame('plinko')}
+        >
+          <FaCircle className="sb-icon" />
+          {!collapsed && 'Plinko'}
         </button>
       </nav>
       <button className="sb-logout" onClick={onLogout}>
-        {!collapsed ? 'Logout' : <FaGamepad/>}
+        {!collapsed ? 'Logout' : <FaGamepad />}
       </button>
     </div>
   );
@@ -61,10 +69,11 @@ export default function App() {
   const [currentBet, setCurrentBet] = useState(0);
   const [modalMessage, setModalMessage] = useState('');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [game, setGame] = useState('blackjack');
 
-  const diff = 'medium'; // AI difficulty always medium
+  const diff = 'medium'; // AI difficulty fixed to medium
 
-  // loop background music
+  // loop the background music
   useEffect(() => {
     audioRef.current.loop = true;
   }, []);
@@ -77,12 +86,12 @@ export default function App() {
 
   const showModal = msg => setModalMessage(msg);
 
-  // dark/light mode
+  // apply dark/light mode
   useEffect(() => {
     document.body.classList.toggle('light-mode', !darkMode);
   }, [darkMode]);
 
-  // persist save metadata
+  // persist save metadata whenever username or balance changes
   useEffect(() => {
     if (currentSave) {
       localStorage.setItem(
@@ -92,25 +101,26 @@ export default function App() {
     }
   }, [username, balance, currentSave]);
 
-  // load a save into play
+  // load a save file
   const handleLoad = (key, data) => {
     setCurrentSave(key);
     setUsername(data.username);
     setBalance(data.balance);
     setOver(true);
     setMessage('');
+    setGame('blackjack');
   };
 
-  // logout back to main menu
+  // return to main menu
   const handleLogout = () => {
     setCurrentSave(null);
     setUsername('');
     setBalance(0);
   };
 
-  // game in-progress flag
   const inProgress = !over;
 
+  // place a blackjack bet
   const placeBet = betAmt => {
     setCurrentBet(betAmt);
     setBalance(b => b - betAmt);
@@ -122,6 +132,7 @@ export default function App() {
     setMessage('');
   };
 
+  // resolve blackjack round
   const finishRound = result => {
     if (result === 'Player wins!') {
       setBalance(b => b + currentBet * 2);
@@ -158,16 +169,22 @@ export default function App() {
     setDeck(dDeck);
 
     const pVal = getHandValue(playerHand), dVal = getHandValue(d);
-    const result = dVal > 21 || pVal > dVal
-      ? 'Player wins!'
-      : pVal === dVal
-        ? 'Tie'
-        : 'Dealer wins!';
+    const result =
+      dVal > 21 || pVal > dVal
+        ? 'Player wins!'
+        : pVal === dVal
+          ? 'Tie'
+          : 'Dealer wins!';
     setMessage(result);
     finishRound(result);
   };
 
-  // show MainMenu when nothing is loaded
+  // handle a bet for Plinko (just deducts the bet)
+  const handlePlinkoBet = amt => {
+    setBalance(b => b - amt);
+  };
+
+  // if no save is loaded, show main menu
   if (!currentSave) {
     return (
       <>
@@ -179,7 +196,6 @@ export default function App() {
     );
   }
 
-  // game screen
   return (
     <>
       {modalMessage && (
@@ -191,6 +207,8 @@ export default function App() {
         collapsed={sidebarCollapsed}
         onToggle={() => setSidebarCollapsed(c => !c)}
         onLogout={handleLogout}
+        game={game}
+        setGame={setGame}
       />
 
       <div className="main-content">
@@ -202,35 +220,54 @@ export default function App() {
               onClick={() => setDarkMode(d => !d)}
               aria-label="Toggle theme"
             >
-              {darkMode ? <IoMdMoon /> :  <FaSun /> }
+              {darkMode ? <IoMdMoon /> : <FaSun />}
             </button>
             <button
               className="music-toggle"
               onClick={toggleMusic}
               aria-label="Toggle music"
             >
-              {musicOn ? <HiVolumeUp /> : <HiVolumeOff /> }
+              {musicOn ? <HiVolumeUp /> : <HiVolumeOff />}
             </button>
           </div>
         </header>
 
         <section className="game-area">
-          {!inProgress ? (
-            <BetForm balance={balance} onBet={placeBet} showModal={showModal} />
+          {game === 'blackjack' ? (
+            !inProgress ? (
+              <BetForm
+                balance={balance}
+                onBet={placeBet}
+                showModal={showModal}
+              />
+            ) : (
+              <>
+                <div className="current-bet">Bet: ${currentBet}</div>
+                <div className="tables">
+                  <Hand cards={playerHand} title="Player" />
+                  <Hand
+                    cards={dealerHand}
+                    title="Dealer"
+                    hideHoleCard={!over}
+                  />
+                </div>
+                <div className="controls-container">
+                  <Controls
+                    onHit={handleHit}
+                    onStand={handleStand}
+                    disabled={!inProgress}
+                  />
+                </div>
+                {message && <div className="round-msg">{message}</div>}
+              </>
+            )
           ) : (
-            <div className="current-bet">Bet: ${currentBet}</div>
+            <Plinko
+              balance={balance}
+              onBet={handlePlinkoBet}
+              showModal={showModal}
+            />
           )}
-
-          <div className="tables">
-            <Hand cards={playerHand} title="Player" />
-            <Hand cards={dealerHand} title="Dealer" hideHoleCard={!over} />
-          </div>
-
-          <div className="controls-container">
-            <Controls onHit={handleHit} onStand={handleStand} disabled={!inProgress} />
-          </div>
-
-          {message && <div className="round-msg">{message}</div>}
         </section>
       </div>
     </>
