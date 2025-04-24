@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState, useEffect, useRef } from 'react';
 import { FaSun, FaChevronLeft, FaChevronRight, FaGamepad } from 'react-icons/fa';
 import { IoMdMoon } from 'react-icons/io';
