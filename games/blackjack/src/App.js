@@ -44,11 +44,12 @@ export default function App() {
   const [modalMessage, setModalMessage] = useState('');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  // NEW: track which game
+  // track which game is active
   const [game, setGame] = useState('blackjack');
 
   const diff = 'medium'; // AI difficulty
 
+  // loop background music
   useEffect(() => {
     audioRef.current.loop = true;
   }, []);
@@ -60,10 +61,12 @@ export default function App() {
 
   const showModal = msg => setModalMessage(msg);
 
+  // dark/light toggle
   useEffect(() => {
     document.body.classList.toggle('light-mode', !darkMode);
   }, [darkMode]);
 
+  // persist save metadata
   useEffect(() => {
     if (currentSave) {
       localStorage.setItem(
@@ -73,6 +76,7 @@ export default function App() {
     }
   }, [username, balance, currentSave]);
 
+  // load a save
   const handleLoad = (key, data) => {
     setCurrentSave(key);
     setUsername(data.username);
@@ -82,6 +86,7 @@ export default function App() {
     setGame('blackjack');
   };
 
+  // logout → back to menu
   const handleLogout = () => {
     setCurrentSave(null);
     setUsername('');
@@ -90,7 +95,7 @@ export default function App() {
 
   const inProgress = !over;
 
-  // Blackjack handlers
+  // Blackjack: place bet
   const placeBet = betAmt => {
     setCurrentBet(betAmt);
     setBalance(b => b - betAmt);
@@ -102,6 +107,7 @@ export default function App() {
     setMessage('');
   };
 
+  // Blackjack: resolve round
   const finishRound = result => {
     if (result === 'Player wins!') {
       setBalance(b => b + currentBet * 2);
@@ -139,54 +145,63 @@ export default function App() {
 
     const pVal = getHandValue(playerHand),
           dVal = getHandValue(d);
-
     const result =
       dVal > 21 || pVal > dVal
         ? 'Player wins!'
         : pVal === dVal
           ? 'Tie'
           : 'Dealer wins!';
-
     setMessage(result);
     finishRound(result);
   };
 
-  // Plinko only needs to deduct the bet
+  // Plinko: just deduct the bet
   const handlePlinkoBet = amt => {
     setBalance(b => b - amt);
   };
 
-  // Render Blackjack UI
+  // always render the tables so cards stay visible
   const renderBlackjack = () => (
-    !inProgress
-      ? <BetForm balance={balance} onBet={placeBet} showModal={showModal} />
-      : (
-        <>
-          <div className="current-bet">Bet: ${currentBet}</div>
-          <div className="tables">
-            <Hand cards={playerHand} title="Player" />
-            <Hand cards={dealerHand} title="Dealer" hideHoleCard={!over} />
-          </div>
-          <div className="controls-container">
-            <Controls onHit={handleHit} onStand={handleStand} disabled={!inProgress} />
-          </div>
-          {message && <div className="round-msg">{message}</div>}
-        </>
-      )
+    <>
+      <div className="tables">
+        <Hand cards={playerHand} title="Player" />
+        <Hand cards={dealerHand} title="Dealer" hideHoleCard={!over} />
+      </div>
+
+      {over ? (
+        <BetForm balance={balance} onBet={placeBet} showModal={showModal} />
+      ) : (
+        <div className="controls-container">
+          <Controls
+            onHit={handleHit}
+            onStand={handleStand}
+            disabled={!inProgress}
+          />
+        </div>
+      )}
+
+      {message && <div className="round-msg">{message}</div>}
+    </>
   );
 
+  // if not logged in, show the MainMenu
   if (!currentSave) {
     return (
       <>
         <MainMenu onLoad={handleLoad} showModal={showModal} />
-        {modalMessage && <Modal message={modalMessage} onClose={() => setModalMessage('')} />}
+        {modalMessage && (
+          <Modal message={modalMessage} onClose={() => setModalMessage('')} />
+        )}
       </>
     );
   }
 
+  // main layout
   return (
     <>
-      {modalMessage && <Modal message={modalMessage} onClose={() => setModalMessage('')} />}
+      {modalMessage && (
+        <Modal message={modalMessage} onClose={() => setModalMessage('')} />
+      )}
 
       <Sidebar
         username={username}
@@ -219,10 +234,15 @@ export default function App() {
         </header>
 
         <section className="game-area">
-          {game === 'blackjack'
-            ? renderBlackjack()
-            : <Plinko balance={balance} onBet={handlePlinkoBet} showModal={showModal} />
-          }
+          {game === 'blackjack' ? (
+            renderBlackjack()
+          ) : (
+            <Plinko
+              balance={balance}
+              onBet={handlePlinkoBet}
+              showModal={showModal}
+            />
+          )}
         </section>
       </div>
     </>
