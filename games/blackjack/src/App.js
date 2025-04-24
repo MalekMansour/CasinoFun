@@ -1,3 +1,4 @@
+// src/App.js
 import React, { useState, useEffect, useRef } from 'react';
 import { FaSun } from 'react-icons/fa';
 import { IoMdMoon } from 'react-icons/io';
@@ -12,8 +13,8 @@ import Hand from './components/Hand';
 import Controls from './components/Controls';
 import BetForm from './components/BetForm';
 import MainMenu from './MainMenu';
-import Sidebar from './components/sidebar';
-import Plinko from './plinko/plinko';
+import Sidebar from './components/sidebar';      // lowercase file
+import Plinko from './plinko/plinko';           // lowercase file
 import './index.css';
 
 function Modal({ message, onClose }) {
@@ -44,12 +45,9 @@ export default function App() {
   const [modalMessage, setModalMessage] = useState('');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  // track which game is active
   const [game, setGame] = useState('blackjack');
+  const diff = 'medium';
 
-  const diff = 'medium'; // AI difficulty
-
-  // loop background music
   useEffect(() => {
     audioRef.current.loop = true;
   }, []);
@@ -61,12 +59,10 @@ export default function App() {
 
   const showModal = msg => setModalMessage(msg);
 
-  // dark/light toggle
   useEffect(() => {
     document.body.classList.toggle('light-mode', !darkMode);
   }, [darkMode]);
 
-  // persist save metadata
   useEffect(() => {
     if (currentSave) {
       localStorage.setItem(
@@ -76,7 +72,6 @@ export default function App() {
     }
   }, [username, balance, currentSave]);
 
-  // load a save
   const handleLoad = (key, data) => {
     setCurrentSave(key);
     setUsername(data.username);
@@ -86,7 +81,6 @@ export default function App() {
     setGame('blackjack');
   };
 
-  // logout → back to menu
   const handleLogout = () => {
     setCurrentSave(null);
     setUsername('');
@@ -95,7 +89,6 @@ export default function App() {
 
   const inProgress = !over;
 
-  // Blackjack: place bet
   const placeBet = betAmt => {
     setCurrentBet(betAmt);
     setBalance(b => b - betAmt);
@@ -107,7 +100,6 @@ export default function App() {
     setMessage('');
   };
 
-  // Blackjack: resolve round
   const finishRound = result => {
     if (result === 'Player wins!') {
       setBalance(b => b + currentBet * 2);
@@ -155,12 +147,8 @@ export default function App() {
     finishRound(result);
   };
 
-  // Plinko: just deduct the bet
-  const handlePlinkoBet = amt => {
-    setBalance(b => b - amt);
-  };
+  const handlePlinkoBet = amt => setBalance(b => b - amt);
 
-  // always render the tables so cards stay visible
   const renderBlackjack = () => (
     <>
       <div className="tables">
@@ -172,11 +160,7 @@ export default function App() {
         <BetForm balance={balance} onBet={placeBet} showModal={showModal} />
       ) : (
         <div className="controls-container">
-          <Controls
-            onHit={handleHit}
-            onStand={handleStand}
-            disabled={!inProgress}
-          />
+          <Controls onHit={handleHit} onStand={handleStand} disabled={!inProgress} />
         </div>
       )}
 
@@ -184,7 +168,6 @@ export default function App() {
     </>
   );
 
-  // if not logged in, show the MainMenu
   if (!currentSave) {
     return (
       <>
@@ -196,7 +179,6 @@ export default function App() {
     );
   }
 
-  // main layout
   return (
     <>
       {modalMessage && (
@@ -234,15 +216,10 @@ export default function App() {
         </header>
 
         <section className="game-area">
-          {game === 'blackjack' ? (
-            renderBlackjack()
-          ) : (
-            <Plinko
-              balance={balance}
-              onBet={handlePlinkoBet}
-              showModal={showModal}
-            />
-          )}
+          {game === 'blackjack'
+            ? renderBlackjack()
+            : <Plinko balance={balance} onBet={handlePlinkoBet} showModal={showModal} />
+          }
         </section>
       </div>
     </>
