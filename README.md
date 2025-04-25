@@ -15,4 +15,4 @@ Currently I am working on Blackjack.
 
 ##  Soundboard
 
-alright, this is the plan
+alright, this is the plan, I need the program to take the desktop audio and transfer it to mic input audio at the same time
