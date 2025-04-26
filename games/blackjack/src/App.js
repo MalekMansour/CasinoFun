@@ -13,8 +13,9 @@ import Hand from './components/Hand';
 import Controls from './components/Controls';
 import BetForm from './components/BetForm';
 import MainMenu from './MainMenu';
-import Sidebar from './components/sidebar';     
-import Plinko from './plinko/plinko';           
+import Sidebar from './components/sidebar';
+import Plinko from './plinko/plinko';
+import HeadsAndTails from './HeadsAndTails/HeadsAndTails';
 import './index.css';
 
 function Modal({ message, onClose }) {
@@ -47,6 +48,14 @@ export default function App() {
 
   const [game, setGame] = useState('blackjack');
   const diff = 'medium';
+
+  // ensure if balance ever <= 1, reset to 1000 and notify
+  useEffect(() => {
+    if (currentSave && balance <= 1) {
+      setModalMessage("You ran out of money! Here's $1,000 to continue.");
+      setBalance(1000);
+    }
+  }, [balance, currentSave]);
 
   useEffect(() => {
     audioRef.current.loop = true;
@@ -89,6 +98,7 @@ export default function App() {
 
   const inProgress = !over;
 
+  // --- Blackjack handlers ---
   const placeBet = betAmt => {
     setCurrentBet(betAmt);
     setBalance(b => Math.ceil(b - betAmt));
@@ -147,7 +157,13 @@ export default function App() {
     finishRound(result);
   };
 
+  // --- Plinko handler ---
   const handlePlinkoBet = amt => {
+    setBalance(b => Math.ceil(b - amt));
+  };
+
+  // --- Heads & Tails handler ---
+  const handleHeadsBet = amt => {
     setBalance(b => Math.ceil(b - amt));
   };
 
@@ -157,7 +173,6 @@ export default function App() {
         <Hand cards={playerHand} title="Player" />
         <Hand cards={dealerHand} title="Dealer" hideHoleCard={!over} />
       </div>
-
       {over ? (
         <BetForm balance={balance} onBet={placeBet} showModal={showModal} />
       ) : (
@@ -165,7 +180,6 @@ export default function App() {
           <Controls onHit={handleHit} onStand={handleStand} disabled={!inProgress} />
         </div>
       )}
-
       {message && <div className="round-msg">{message}</div>}
     </>
   );
@@ -174,18 +188,14 @@ export default function App() {
     return (
       <>
         <MainMenu onLoad={handleLoad} showModal={showModal} />
-        {modalMessage && (
-          <Modal message={modalMessage} onClose={() => setModalMessage('')} />
-        )}
+        {modalMessage && <Modal message={modalMessage} onClose={() => setModalMessage('')} />}
       </>
     );
   }
 
   return (
     <>
-      {modalMessage && (
-        <Modal message={modalMessage} onClose={() => setModalMessage('')} />
-      )}
+      {modalMessage && <Modal message={modalMessage} onClose={() => setModalMessage('')} />}
 
       <Sidebar
         username={username}
@@ -218,10 +228,13 @@ export default function App() {
         </header>
 
         <section className="game-area">
-          {game === 'blackjack'
-            ? renderBlackjack()
-            : <Plinko balance={balance} onBet={handlePlinkoBet} showModal={showModal} />
-          }
+          {game === 'blackjack' ? (
+            renderBlackjack()
+          ) : game === 'plinko' ? (
+            <Plinko balance={balance} onBet={handlePlinkoBet} showModal={showModal} />
+          ) : (
+            <HeadsAndTails balance={balance} onBet={handleHeadsBet} showModal={showModal} />
+          )}
         </section>
       </div>
     </>
