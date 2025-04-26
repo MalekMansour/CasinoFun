@@ -11,7 +11,6 @@ export default function Plinko({ balance, onBet, showModal }) {
   // 11 bins, center is 0.2×
   const multipliers = [10,5,2,1,0.5,0.2,0.5,1,2,5,10];
   // exact chance distribution:
-  // 10×: 2% total (1% each outer), 5×: 3% total, 2×: 5%, 1×: 20%, 0.5×: 30%, 0.2×: 40%
   const weights     = [1,1.5,2.5,10,15,40,15,10,2.5,1.5,1];
   const binCount    = multipliers.length;
   const binWidthPct = 100 / binCount;
