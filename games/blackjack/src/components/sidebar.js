@@ -1,12 +1,8 @@
+// src/components/sidebar.js
 import React from 'react';
-import {
-  FaChevronLeft,
-  FaChevronRight,
-} from 'react-icons/fa';
-import { GiPokerHand } from "react-icons/gi";
-import { FaRegCircle } from "react-icons/fa";
-import { IoIosExit } from "react-icons/io";
-
+import { FaChevronLeft, FaChevronRight, FaRegCircle } from 'react-icons/fa';
+import { GiPokerHand, GiTwoCoins } from 'react-icons/gi';
+import { IoIosExit } from 'react-icons/io';
 
 export default function Sidebar({
   username,
@@ -32,12 +28,21 @@ export default function Sidebar({
           <GiPokerHand className="sb-icon" />
           {!collapsed && 'Blackjack'}
         </button>
+
         <button
           className={`sb-item ${game === 'plinko' ? 'active' : ''}`}
           onClick={() => setGame('plinko')}
         >
           <FaRegCircle className="sb-icon" />
           {!collapsed && 'Plinko'}
+        </button>
+
+        <button
+          className={`sb-item ${game === 'headsAndTails' ? 'active' : ''}`}
+          onClick={() => setGame('headsAndTails')}
+        >
+          <GiTwoCoins className="sb-icon" />
+          {!collapsed && 'Heads & Tails'}
         </button>
       </nav>
 
