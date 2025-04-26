@@ -37,45 +37,53 @@ export default function App() {
   const [currentSave, setCurrentSave] = useState(null);
   const [username, setUsername] = useState('');
   const [balance, setBalance] = useState(0);
+
+  // Blackjack state
   const [deck, setDeck] = useState([]);
   const [playerHand, setPlayerHand] = useState([]);
   const [dealerHand, setDealerHand] = useState([]);
   const [message, setMessage] = useState('');
   const [over, setOver] = useState(true);
   const [currentBet, setCurrentBet] = useState(0);
+
   const [modalMessage, setModalMessage] = useState('');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const [game, setGame] = useState('blackjack');
   const diff = 'medium';
 
-  // ensure if balance ever <= 1, reset to 1000 and notify
-  useEffect(() => {
-    if (currentSave && balance <= 1) {
-      setModalMessage("You ran out of money! Here's $1,000 to continue.");
-      setBalance(1000);
-    }
-  }, [balance, currentSave]);
+  // NEW: track whether a round is active or over
+  const [roundOver, setRoundOver] = useState(true);
 
+  // Music loop
   useEffect(() => {
     audioRef.current.loop = true;
   }, []);
 
+  // If after a round finishes your balance ≤ 1, give the $1,000 bailout
+  useEffect(() => {
+    if (roundOver && currentSave && balance <= 1) {
+      setModalMessage("You ran out of money! Here's $1,000 to continue.");
+      setBalance(1000);
+    }
+  }, [balance, roundOver, currentSave]);
+
   const toggleMusic = () => {
     musicOn ? audioRef.current.pause() : audioRef.current.play();
-    setMusicOn(on => !on);
+    setMusicOn(m => !m);
   };
 
   const showModal = msg => setModalMessage(msg);
 
+  // Dark/light mode
   useEffect(() => {
     document.body.classList.toggle('light-mode', !darkMode);
   }, [darkMode]);
 
+  // Persist save
   useEffect(() => {
     if (currentSave) {
-      localStorage.setItem(
-        currentSave,
+      localStorage.setItem(currentSave,
         JSON.stringify({ username, balance })
       );
     }
@@ -88,6 +96,7 @@ export default function App() {
     setOver(true);
     setMessage('');
     setGame('blackjack');
+    setRoundOver(true);
   };
 
   const handleLogout = () => {
@@ -98,8 +107,9 @@ export default function App() {
 
   const inProgress = !over;
 
-  // --- Blackjack handlers ---
+  // --- Blackjack ---
   const placeBet = betAmt => {
+    setRoundOver(false);
     setCurrentBet(betAmt);
     setBalance(b => Math.ceil(b - betAmt));
     const { deck, playerHand, dealerHand } = dealInitialHands();
@@ -113,13 +123,13 @@ export default function App() {
   const finishRound = result => {
     if (result === 'Player wins!') {
       setBalance(b => Math.ceil(b + currentBet * 2));
-    } else if (result === 'Dealer wins!' && balance <= 0) {
-      showModal("You went bankrupt! Here's $1,000 to continue.");
-      setBalance(1000);
     } else if (result === 'Tie') {
       setBalance(b => Math.ceil(b + currentBet));
     }
+    // loss case: we already deducted the bet, so no addition
     setOver(true);
+    setRoundOver(true);
+    setMessage(result);
   };
 
   const handleHit = () => {
@@ -129,7 +139,6 @@ export default function App() {
     setDeck(rest);
     setPlayerHand(newHand);
     if (getHandValue(newHand) > 21) {
-      setMessage('Busted! Dealer wins.');
       finishRound('Dealer wins!');
     }
   };
@@ -153,20 +162,22 @@ export default function App() {
         : pVal === dVal
           ? 'Tie'
           : 'Dealer wins!';
-    setMessage(result);
     finishRound(result);
   };
 
-  // --- Plinko handler ---
+  // --- Plinko ---
   const handlePlinkoBet = amt => {
+    setRoundOver(false);
     setBalance(b => Math.ceil(b - amt));
   };
 
-  // --- Heads & Tails handler ---
+  // --- Heads & Tails ---
   const handleHeadsBet = amt => {
+    setRoundOver(false);
     setBalance(b => Math.ceil(b - amt));
   };
 
+  // Render Blackjack UI
   const renderBlackjack = () => (
     <>
       <div className="tables">
@@ -231,9 +242,19 @@ export default function App() {
           {game === 'blackjack' ? (
             renderBlackjack()
           ) : game === 'plinko' ? (
-            <Plinko balance={balance} onBet={handlePlinkoBet} showModal={showModal} />
+            <Plinko
+              balance={balance}
+              onBet={handlePlinkoBet}
+              showModal={showModal}
+              onRoundEnd={() => setRoundOver(true)}
+            />
           ) : (
-            <HeadsAndTails balance={balance} onBet={handleHeadsBet} showModal={showModal} />
+            <HeadsAndTails
+              balance={balance}
+              onBet={handleHeadsBet}
+              showModal={showModal}
+              onRoundEnd={() => setRoundOver(true)}
+            />
           )}
         </section>
       </div>
