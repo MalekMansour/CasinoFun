@@ -2,10 +2,11 @@ import React from 'react';
 import {
   FaChevronLeft,
   FaChevronRight,
-  FaGamepad,
-  FaCircle
 } from 'react-icons/fa';
 import { GiPokerHand } from "react-icons/gi";
+import { FaRegCircle } from "react-icons/fa";
+import { IoIosExit } from "react-icons/io";
+
 
 export default function Sidebar({
   username,
@@ -28,20 +29,20 @@ export default function Sidebar({
           className={`sb-item ${game === 'blackjack' ? 'active' : ''}`}
           onClick={() => setGame('blackjack')}
         >
-          <FaGamepad className="sb-icon" />
+          <GiPokerHand className="sb-icon" />
           {!collapsed && 'Blackjack'}
         </button>
         <button
           className={`sb-item ${game === 'plinko' ? 'active' : ''}`}
           onClick={() => setGame('plinko')}
         >
-          <FaCircle className="sb-icon" />
+          <FaRegCircle className="sb-icon" />
           {!collapsed && 'Plinko'}
         </button>
       </nav>
 
       <button className="sb-logout" onClick={onLogout}>
-        {!collapsed ? 'Logout' : <FaGamepad />}
+        {!collapsed ? 'Logout' : <IoIosExit />}
       </button>
     </div>
   );
