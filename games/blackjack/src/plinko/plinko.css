@@ -59,9 +59,9 @@
   position: absolute;
   width: 18px;
   height: 18px;
-  background: hsl(340,100%,70%);
+  background: #F7AD45;
   border-radius: 50%;
-  box-shadow: 0 0 8px rgba(255,20,147,0.7);
+  box-shadow: 0 0 8px #E9A319;
   transform: translate(-50%, -50%);
   transition: top 0.3s ease, left 0.3s ease;
 }
