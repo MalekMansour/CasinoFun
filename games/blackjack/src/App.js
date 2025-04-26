@@ -52,30 +52,28 @@ export default function App() {
   const [game, setGame] = useState('blackjack');
   const diff = 'medium';
 
-  // NEW: track whether a round is active or over
-  const [roundOver, setRoundOver] = useState(true);
+  // Bailout: wait 3 seconds after balance ≤ 1, then top up to $1,000
+  useEffect(() => {
+    if (currentSave && balance <= 1) {
+      const timer = setTimeout(() => {
+        setModalMessage("You ran out of money! Here's $1,000 to continue.");
+        setBalance(1000);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [balance, currentSave]);
 
-  // Music loop
   useEffect(() => {
     audioRef.current.loop = true;
   }, []);
 
-  // If after a round finishes your balance ≤ 1, give the $1,000 bailout
-  useEffect(() => {
-    if (roundOver && currentSave && balance <= 1) {
-      setModalMessage("You ran out of money! Here's $1,000 to continue.");
-      setBalance(1000);
-    }
-  }, [balance, roundOver, currentSave]);
-
   const toggleMusic = () => {
     musicOn ? audioRef.current.pause() : audioRef.current.play();
-    setMusicOn(m => !m);
+    setMusicOn(on => !on);
   };
 
   const showModal = msg => setModalMessage(msg);
 
-  // Dark/light mode
   useEffect(() => {
     document.body.classList.toggle('light-mode', !darkMode);
   }, [darkMode]);
@@ -83,7 +81,8 @@ export default function App() {
   // Persist save
   useEffect(() => {
     if (currentSave) {
-      localStorage.setItem(currentSave,
+      localStorage.setItem(
+        currentSave,
         JSON.stringify({ username, balance })
       );
     }
@@ -96,7 +95,6 @@ export default function App() {
     setOver(true);
     setMessage('');
     setGame('blackjack');
-    setRoundOver(true);
   };
 
   const handleLogout = () => {
@@ -109,7 +107,6 @@ export default function App() {
 
   // --- Blackjack ---
   const placeBet = betAmt => {
-    setRoundOver(false);
     setCurrentBet(betAmt);
     setBalance(b => Math.ceil(b - betAmt));
     const { deck, playerHand, dealerHand } = dealInitialHands();
@@ -126,9 +123,7 @@ export default function App() {
     } else if (result === 'Tie') {
       setBalance(b => Math.ceil(b + currentBet));
     }
-    // loss case: we already deducted the bet, so no addition
     setOver(true);
-    setRoundOver(true);
     setMessage(result);
   };
 
@@ -154,8 +149,7 @@ export default function App() {
     setDealerHand(d);
     setDeck(dDeck);
 
-    const pVal = getHandValue(playerHand),
-          dVal = getHandValue(d);
+    const pVal = getHandValue(playerHand), dVal = getHandValue(d);
     const result =
       dVal > 21 || pVal > dVal
         ? 'Player wins!'
@@ -167,17 +161,14 @@ export default function App() {
 
   // --- Plinko ---
   const handlePlinkoBet = amt => {
-    setRoundOver(false);
     setBalance(b => Math.ceil(b - amt));
   };
 
   // --- Heads & Tails ---
   const handleHeadsBet = amt => {
-    setRoundOver(false);
     setBalance(b => Math.ceil(b - amt));
   };
 
-  // Render Blackjack UI
   const renderBlackjack = () => (
     <>
       <div className="tables">
@@ -242,19 +233,9 @@ export default function App() {
           {game === 'blackjack' ? (
             renderBlackjack()
           ) : game === 'plinko' ? (
-            <Plinko
-              balance={balance}
-              onBet={handlePlinkoBet}
-              showModal={showModal}
-              onRoundEnd={() => setRoundOver(true)}
-            />
+            <Plinko balance={balance} onBet={handlePlinkoBet} showModal={showModal} />
           ) : (
-            <HeadsAndTails
-              balance={balance}
-              onBet={handleHeadsBet}
-              showModal={showModal}
-              onRoundEnd={() => setRoundOver(true)}
-            />
+            <HeadsAndTails balance={balance} onBet={handleHeadsBet} showModal={showModal} />
           )}
         </section>
       </div>
