@@ -5,6 +5,7 @@ import {
   FaGamepad,
   FaCircle
 } from 'react-icons/fa';
+import { GiPokerHand } from "react-icons/gi";
 
 export default function Sidebar({
   username,
