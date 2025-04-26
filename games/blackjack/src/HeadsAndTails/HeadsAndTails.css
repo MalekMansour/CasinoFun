@@ -1,0 +1,36 @@
+.ht-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+  }
+  
+  .choice-container {
+    margin-bottom: 1rem;
+  }
+  
+  .choice-container label {
+    margin: 0 1rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+  } 
+  
+  .flip-msg {
+    margin: 1rem 0;
+    font-style: italic;
+    color: var(--text-color);
+  }
+  
+  .result-container {
+    text-align: center;
+  }
+  
+  .result-container button {
+    margin-top: 1rem;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 6px;
+    background: pink;
+    cursor: pointer;
+  }
+  
