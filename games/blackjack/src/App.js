@@ -91,7 +91,7 @@ export default function App() {
 
   const placeBet = betAmt => {
     setCurrentBet(betAmt);
-    setBalance(b => b - betAmt);
+    setBalance(b => Math.ceil(b - betAmt));
     const { deck, playerHand, dealerHand } = dealInitialHands();
     setDeck(deck);
     setPlayerHand(playerHand);
@@ -102,12 +102,12 @@ export default function App() {
 
   const finishRound = result => {
     if (result === 'Player wins!') {
-      setBalance(b => b + currentBet * 2);
+      setBalance(b => Math.ceil(b + currentBet * 2));
     } else if (result === 'Dealer wins!' && balance <= 0) {
       showModal("You went bankrupt! Here's $1,000 to continue.");
       setBalance(1000);
     } else if (result === 'Tie') {
-      setBalance(b => b + currentBet);
+      setBalance(b => Math.ceil(b + currentBet));
     }
     setOver(true);
   };
@@ -147,7 +147,9 @@ export default function App() {
     finishRound(result);
   };
 
-  const handlePlinkoBet = amt => setBalance(b => b - amt);
+  const handlePlinkoBet = amt => {
+    setBalance(b => Math.ceil(b - amt));
+  };
 
   const renderBlackjack = () => (
     <>
