@@ -13,8 +13,8 @@ import Hand from './components/Hand';
 import Controls from './components/Controls';
 import BetForm from './components/BetForm';
 import MainMenu from './MainMenu';
-import Sidebar from './components/sidebar';      // lowercase file
-import Plinko from './plinko/plinko';           // lowercase file
+import Sidebar from './components/sidebar';     
+import Plinko from './plinko/plinko';           
 import './index.css';
 
 function Modal({ message, onClose }) {
