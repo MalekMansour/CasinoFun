@@ -1,0 +1,15 @@
+{
+  "sounds": [
+    {
+      "filename": "Shocked - Sound Effect (HD).mp3",
+      "name": "SHOCK"
+    }
+  ],
+  "shortcuts": {
+    "1": "Shocked - Sound Effect (HD).mp3"
+  },
+  "use_mic": true,
+  "route_device": "CABLE Input (VB-Audio Virtual C",
+  "play_volume": 44.1108545034642,
+  "vm_mode": true
+}
