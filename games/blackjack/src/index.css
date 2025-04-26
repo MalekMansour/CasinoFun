@@ -71,10 +71,17 @@ body.light-mode {
   text-align: left;
 }
 .sidebar .sb-games .sb-item .sb-icon {
-  margin-right: 0.5rem;
-}
+  margin-right: 0.5rem;}
+
 .sidebar .sb-games .sb-item:hover {
   background: rgba(255,255,255,0.1);
+}
+
+.sb-icon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  background-size: cover;
 }
 .sidebar .sb-logout {
   position: absolute;
