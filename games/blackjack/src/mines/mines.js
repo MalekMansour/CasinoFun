@@ -1,3 +1,4 @@
+// src/mines/mines.js
 import React, { useState, useMemo } from 'react';
 import BetForm from '../components/BetForm';
 import './mines.css';
@@ -13,107 +14,112 @@ function comb(n, k) {
 }
 
 export default function Mines({ balance, onBet, showModal }) {
-  const [bet, setBet] = useState(null);
+  const [bet, setBet] = useState(0);
   const [mines, setMines] = useState(3);
-  const [grid, setGrid] = useState([]); // will be array of 25 items: 'hidden' | 'safe' | 'mine'
-  const [revealedCount, setRevealedCount] = useState(0);
-  const [gameOver, setGameOver] = useState(false);
+  const [mineSet, setMineSet] = useState(new Set());
+  const [revealedSet, setRevealedSet] = useState(new Set());
+  const [detonated, setDetonated] = useState(null);
 
-  // initialize grid when bet placed
   const startGame = amt => {
     setBet(amt);
     onBet(amt); // deduct stake
-    // build an array of length 25 with 'mine' x m and 'hidden' else
-    const cells = Array(25).fill('hidden');
-    // randomly place mines
-    let placed = 0;
-    while (placed < mines) {
-      const idx = Math.floor(Math.random() * 25);
-      if (cells[idx] !== 'mine') {
-        cells[idx] = 'mine';
-        placed++;
-      }
+    const m = new Set();
+    while (m.size < mines) {
+      m.add(Math.floor(Math.random() * 25));
     }
-    setGrid(cells);
-    setRevealedCount(0);
-    setGameOver(false);
+    setMineSet(m);
+    setRevealedSet(new Set());
+    setDetonated(null);
   };
 
   const handleClick = idx => {
-    if (gameOver || grid[idx] !== 'hidden') return;
-    const newGrid = [...grid];
-    if (grid[idx] === 'mine') {
-      newGrid[idx] = 'mine';
-      setGrid(newGrid);
-      setGameOver(true);
-      showModal('💥 Boom! You hit a mine and lost your bet.');
+    if (detonated !== null || revealedSet.has(idx) || bet === 0) return;
+    if (mineSet.has(idx)) {
+      setDetonated(idx);
+      showModal('💥 BOOM! You hit a mine and lost your bet.');
     } else {
-      newGrid[idx] = 'safe';
-      setGrid(newGrid);
-      setRevealedCount(c => c + 1);
+      setRevealedSet(s => new Set(s).add(idx));
     }
   };
 
-  const safeCells = 25 - mines;
-  const payoutMult = useMemo(() => {
+  const safeCount = 25 - mines;
+  const revealedCount = revealedSet.size;
+
+  const multiplier = useMemo(() => {
     const k = revealedCount;
     if (k === 0) return 1.0;
-    // fair multiplier = C(25, k) / C(safeCells, k)
-    return comb(25, k) / comb(safeCells, k);
-  }, [revealedCount, safeCells]);
+    return comb(25, k) / comb(safeCount, k);
+  }, [revealedCount, safeCount]);
 
   const cashOut = () => {
-    const winnings = Math.ceil(bet * payoutMult);
-    onBet(-winnings);
-    showModal(`You cashed out ×${payoutMult.toFixed(2)} and won $${winnings}!`);
+    const win = Math.ceil(bet * multiplier);
+    onBet(-win);
+    showModal(`Cashed out ×${multiplier.toFixed(2)} for $${win}!`);
     reset();
   };
 
   const reset = () => {
-    setBet(null);
-    setGrid([]);
-    setRevealedCount(0);
-    setGameOver(false);
+    setBet(0);
+    setMineSet(new Set());
+    setRevealedSet(new Set());
+    setDetonated(null);
   };
 
   return (
     <div className="mines-container">
-      {!bet ? (
-        <>
-          <div className="mines-controls">
-            <label>
-              Mines:
-              <select value={mines} onChange={e => setMines(+e.target.value)}>
-                {Array.from({length:24},(_,i)=>i+1).map(n=>(
-                  <option key={n} value={n}>{n}</option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <BetForm balance={balance} onBet={startGame} showModal={showModal} />
-        </>
-      ) : (
-        <>
-          <div className="mines-grid">
-            {grid.map((cell, idx) => (
-              <button
-                key={idx}
-                className={`cell ${cell}`}
-                onClick={() => handleClick(idx)}
-              >
-                {cell === 'safe' && '💎'}
-                {cell === 'mine' && (gameOver ? '💣' : '')}
-              </button>
+      <div className="mines-controls">
+        <label>
+          Mines:
+          <select
+            value={mines}
+            onChange={e => setMines(+e.target.value)}
+            disabled={bet > 0 && detonated === null}
+          >
+            {Array.from({ length: 24 }, (_, i) => i + 1).map(n => (
+              <option key={n} value={n}>{n}</option>
             ))}
-          </div>
+          </select>
+        </label>
+      </div>
+
+      <BetForm
+        balance={balance}
+        onBet={startGame}
+        showModal={showModal}
+        disabled={bet > 0 && detonated === null}
+      />
+
+      <div className="mines-grid">
+        {Array.from({ length: 25 }).map((_, idx) => {
+          let cls = 'cell hidden';
+          let label = '';
+          if (detonated === idx) {
+            cls = 'cell detonated';
+            label = '💣';
+          } else if (revealedSet.has(idx)) {
+            cls = 'cell safe';
+            label = '💎';
+          }
+          return (
+            <button
+              key={idx}
+              className={cls}
+              onClick={() => handleClick(idx)}
+            >
+              {label}
+            </button>
+          );
+        })}
+      </div>
+
+      {bet > 0 && (
+        <>
           <div className="mines-info">
             <p>Revealed: {revealedCount}</p>
-            <p>Multiplier: ×{payoutMult.toFixed(2)}</p>
+            <p>Multiplier: ×{multiplier.toFixed(2)}</p>
           </div>
           <div className="mines-actions">
-            {!gameOver && (
-              <button onClick={cashOut}>Cash Out</button>
-            )}
+            {!detonated && <button onClick={cashOut}>Cash Out</button>}
             <button onClick={reset}>Reset</button>
           </div>
         </>
