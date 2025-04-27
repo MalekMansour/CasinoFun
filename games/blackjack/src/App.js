@@ -16,6 +16,7 @@ import Sidebar from './components/sidebar';
 import Plinko from './plinko/plinko';
 import HeadsAndTails from './HeadsAndTails/HeadsAndTails';
 import DiceGame from './dice/dice';
+import Mines from './mines/mines';
 import './index.css';
 
 function Modal({ message, onClose }) {
@@ -38,7 +39,7 @@ export default function App() {
   const [username, setUsername] = useState('');
   const [balance, setBalance] = useState(0);
 
-  // Blackjack state
+  // Blackjack
   const [deck, setDeck] = useState([]);
   const [playerHand, setPlayerHand] = useState([]);
   const [dealerHand, setDealerHand] = useState([]);
@@ -52,14 +53,14 @@ export default function App() {
   const [game, setGame] = useState('blackjack');
   const diff = 'medium';
 
-  // Bailout: wait 3 seconds after balance ≤ 1, then top up to $1,000
+  // Bailout after 3s when balance ≤1
   useEffect(() => {
     if (currentSave && balance <= 1) {
-      const timer = setTimeout(() => {
+      const t = setTimeout(() => {
         setModalMessage("You ran out of money! Here's $1,000 to continue.");
         setBalance(1000);
       }, 3000);
-      return () => clearTimeout(timer);
+      return () => clearTimeout(t);
     }
   }, [balance, currentSave]);
 
@@ -70,7 +71,7 @@ export default function App() {
   const toggleMusic = () => {
     if (musicOn) audioRef.current.pause();
     else audioRef.current.play();
-    setMusicOn(on => !on);
+    setMusicOn(m => !m);
   };
 
   const showModal = msg => setModalMessage(msg);
@@ -79,13 +80,10 @@ export default function App() {
     document.body.classList.toggle('light-mode', !darkMode);
   }, [darkMode]);
 
-  // Persist save
+  // Persist
   useEffect(() => {
     if (currentSave) {
-      localStorage.setItem(
-        currentSave,
-        JSON.stringify({ username, balance })
-      );
+      localStorage.setItem(currentSave, JSON.stringify({ username, balance }));
     }
   }, [username, balance, currentSave]);
 
@@ -97,7 +95,6 @@ export default function App() {
     setMessage('');
     setGame('blackjack');
   };
-
   const handleLogout = () => {
     setCurrentSave(null);
     setUsername('');
@@ -106,10 +103,10 @@ export default function App() {
 
   const inProgress = !over;
 
-  // --- Blackjack ---
-  const placeBet = betAmt => {
-    setCurrentBet(betAmt);
-    setBalance(b => Math.ceil(b - betAmt));
+  // Blackjack handlers
+  const placeBet = amt => {
+    setCurrentBet(amt);
+    setBalance(b => Math.ceil(b - amt));
     const { deck, playerHand, dealerHand } = dealInitialHands();
     setDeck(deck);
     setPlayerHand(playerHand);
@@ -117,28 +114,20 @@ export default function App() {
     setOver(false);
     setMessage('');
   };
-
   const finishRound = result => {
-    if (result === 'Player wins!') {
-      setBalance(b => Math.ceil(b + currentBet * 2));
-    } else if (result === 'Tie') {
-      setBalance(b => Math.ceil(b + currentBet));
-    }
+    if (result === 'Player wins!') setBalance(b => Math.ceil(b + currentBet * 2));
+    else if (result === 'Tie') setBalance(b => Math.ceil(b + currentBet));
     setOver(true);
     setMessage(result);
   };
-
   const handleHit = () => {
     if (!inProgress) return;
     const [card, ...rest] = deck;
     const newHand = [...playerHand, card];
     setDeck(rest);
     setPlayerHand(newHand);
-    if (getHandValue(newHand) > 21) {
-      finishRound('Dealer wins!');
-    }
+    if (getHandValue(newHand) > 21) finishRound('Dealer wins!');
   };
-
   const handleStand = () => {
     if (!inProgress) return;
     let d = [...dealerHand], dDeck = [...deck];
@@ -149,31 +138,20 @@ export default function App() {
     }
     setDealerHand(d);
     setDeck(dDeck);
-
     const pVal = getHandValue(playerHand), dVal = getHandValue(d);
-    const result =
-      dVal > 21 || pVal > dVal
-        ? 'Player wins!'
-        : pVal === dVal
-          ? 'Tie'
-          : 'Dealer wins!';
+    const result = dVal > 21 || pVal > dVal
+      ? 'Player wins!'
+      : pVal === dVal
+        ? 'Tie'
+        : 'Dealer wins!';
     finishRound(result);
   };
 
-  // --- Plinko ---
-  const handlePlinkoBet = amt => {
-    setBalance(b => Math.ceil(b - amt));
-  };
-
-  // --- Heads & Tails ---
-  const handleHeadsBet = amt => {
-    setBalance(b => Math.ceil(b - amt));
-  };
-
-  // --- Dice ---
-  const handleDiceBet = amt => {
-    setBalance(b => Math.ceil(b - amt));
-  };
+  // Other games handlers
+  const handlePlinkoBet = amt => setBalance(b => Math.ceil(b - amt));
+  const handleHeadsBet = amt => setBalance(b => Math.ceil(b - amt));
+  const handleDiceBet  = amt => setBalance(b => Math.ceil(b - amt));
+  const handleMinesBet = amt => setBalance(b => Math.ceil(b - amt));
 
   const renderBlackjack = () => (
     <>
@@ -181,13 +159,12 @@ export default function App() {
         <Hand cards={playerHand} title="Player" />
         <Hand cards={dealerHand} title="Dealer" hideHoleCard={!over} />
       </div>
-      {over ? (
-        <BetForm balance={balance} onBet={placeBet} showModal={showModal} />
-      ) : (
-        <div className="controls-container">
-          <Controls onHit={handleHit} onStand={handleStand} disabled={!inProgress} />
-        </div>
-      )}
+      {over
+        ? <BetForm balance={balance} onBet={placeBet} showModal={showModal} />
+        : <div className="controls-container">
+            <Controls onHit={handleHit} onStand={handleStand} disabled={!inProgress}/>
+          </div>
+      }
       {message && <div className="round-msg">{message}</div>}
     </>
   );
@@ -195,20 +172,20 @@ export default function App() {
   if (!currentSave) {
     return (
       <>
-        <MainMenu onLoad={handleLoad} showModal={showModal} />
-        {modalMessage && <Modal message={modalMessage} onClose={() => setModalMessage('')} />}
+        <MainMenu onLoad={handleLoad} showModal={showModal}/>
+        {modalMessage && <Modal message={modalMessage} onClose={()=>setModalMessage('')}/>}
       </>
     );
   }
 
   return (
     <>
-      {modalMessage && <Modal message={modalMessage} onClose={() => setModalMessage('')} />}
+      {modalMessage && <Modal message={modalMessage} onClose={()=>setModalMessage('')}/>}
 
       <Sidebar
         username={username}
         collapsed={sidebarCollapsed}
-        onToggle={() => setSidebarCollapsed(c => !c)}
+        onToggle={()=>setSidebarCollapsed(c=>!c)}
         onLogout={handleLogout}
         game={game}
         setGame={setGame}
@@ -218,33 +195,22 @@ export default function App() {
         <header className="top-banner">
           <div className="balance-container">Balance: ${balance}</div>
           <div className="top-controls">
-            <button
-              className="theme-toggle"
-              onClick={() => setDarkMode(d => !d)}
-              aria-label="Toggle theme"
-            >
-              {darkMode ? <IoMdMoon /> : <FaSun />}
+            <button className="theme-toggle" onClick={()=>setDarkMode(d=>!d)} aria-label="Toggle theme">
+              {darkMode ? <IoMdMoon/> : <FaSun/>}
             </button>
-            <button
-              className="music-toggle"
-              onClick={toggleMusic}
-              aria-label="Toggle music"
-            >
-              {musicOn ? <HiVolumeUp /> : <HiVolumeOff />}
+            <button className="music-toggle" onClick={toggleMusic} aria-label="Toggle music">
+              {musicOn ? <HiVolumeUp/> : <HiVolumeOff/>}
             </button>
           </div>
         </header>
 
         <section className="game-area">
-          {game === 'blackjack' ? (
-            renderBlackjack()
-          ) : game === 'plinko' ? (
-            <Plinko balance={balance} onBet={handlePlinkoBet} showModal={showModal} />
-          ) : game === 'headsAndTails' ? (
-            <HeadsAndTails balance={balance} onBet={handleHeadsBet} showModal={showModal} />
-          ) : (
-            <DiceGame balance={balance} onBet={handleDiceBet} showModal={showModal} />
-          )}
+          {game === 'blackjack'      ? renderBlackjack()
+           : game === 'plinko'        ? <Plinko        balance={balance} onBet={handlePlinkoBet} showModal={showModal}/>
+           : game === 'headsAndTails' ? <HeadsAndTails balance={balance} onBet={handleHeadsBet} showModal={showModal}/>
+           : game === 'dice'          ? <DiceGame      balance={balance} onBet={handleDiceBet}  showModal={showModal}/>
+           : /* mines */              <Mines         balance={balance} onBet={handleMinesBet} showModal={showModal}/>
+          }
         </section>
       </div>
     </>
