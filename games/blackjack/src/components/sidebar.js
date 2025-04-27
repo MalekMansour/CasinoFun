@@ -1,5 +1,11 @@
 import React from 'react';
-import { FaChevronLeft, FaChevronRight, FaCircle, FaDice } from 'react-icons/fa';
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaCircle,
+  FaDice,
+  FaBomb
+} from 'react-icons/fa';
 import { GiPokerHand, GiTwoCoins } from 'react-icons/gi';
 import { IoIosExit } from 'react-icons/io';
 
@@ -50,6 +56,14 @@ export default function Sidebar({
         >
           <FaDice className="sb-icon" />
           {!collapsed && 'Dice'}
+        </button>
+
+        <button
+          className={`sb-item ${game === 'mines' ? 'active' : ''}`}
+          onClick={() => setGame('mines')}
+        >
+          <FaBomb className="sb-icon" />
+          {!collapsed && 'Mines'}
         </button>
       </nav>
 
