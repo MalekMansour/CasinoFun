@@ -11,7 +11,7 @@ body {
   transition: background 0.3s, color 0.3s;
 }
 body.light-mode {
-  --bg-color: #328E6E;
+  --bg-color: #C1D8C3;
   --text-color: #000;
   --card-border-color: #000;
 }
