@@ -14,7 +14,7 @@ import './dice.css';
 export default function DiceGame({ balance, onBet, showModal }) {
   const [betAmount, setBetAmount] = useState(null);
   const [pick, setPick] = useState(2);
-  const [roll, setRoll] = useState(null);        // {d1, d2, sum}
+  const [roll, setRoll] = useState(null);       
   const [multiplier, setMultiplier] = useState(null);
 
   function getDiceIcon(n) {
