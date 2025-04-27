@@ -1,0 +1,41 @@
+.dice-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+  }
+  
+  .dice-pick {
+    margin-bottom: 1rem;
+  }
+  
+  .dice-pick label {
+    margin-right: 0.5rem;
+  }
+  
+  .dice-pick select {
+    padding: 0.3rem;
+  }
+  
+  .dice-rolling {
+    font-style: italic;
+    color: var(--text-color);
+  }
+  
+  .dice-result {
+    text-align: center;
+  }
+  
+  .dice-result p {
+    margin: 0.5rem 0;
+  }
+  
+  .dice-result button {
+    margin-top: 1rem;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 6px;
+    background: pink;
+    cursor: pointer;
+  }
+  
