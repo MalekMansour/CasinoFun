@@ -41,7 +41,7 @@
     background: rgb(116, 194, 116);
   }
   .cell.detonated {
-    background: lightcoral;
+    background: rgb(165, 35, 35);
   }
   
   .mines-info {
