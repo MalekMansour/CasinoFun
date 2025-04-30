@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import BetForm from '../components/BetForm';
-import './higherorlower.css';
+import './HigherOrLower.css';
 
 const cards = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A'];
 const cardValue = c => (typeof c === 'number' ? c : { J: 11, Q: 12, K: 13, A: 14 }[c]);
