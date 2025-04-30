@@ -1,4 +1,3 @@
-// src/components/sidebar.js
 import React from 'react';
 import {
   FaChevronLeft,
