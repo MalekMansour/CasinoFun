@@ -13,7 +13,7 @@ export default function Plinko({ balance, onBet, showModal }) {
   const binWidthPct = 100 / binCount;
   const rows        = binCount - 1;
   const rowSpacing  = 100 / (rows + 1);
-  const stepDur     = 150; // ms per bounce
+  const stepDur     = 150; 
 
   const handleBet = amt => {
     setBetAmount(amt);
