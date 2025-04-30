@@ -1,10 +1,12 @@
+// src/components/sidebar.js
 import React from 'react';
 import {
   FaChevronLeft,
   FaChevronRight,
   FaCircle,
   FaDice,
-  FaBomb
+  FaBomb,
+  FaSortAmountUp
 } from 'react-icons/fa';
 import { GiPokerHand, GiTwoCoins } from 'react-icons/gi';
 import { IoIosExit } from 'react-icons/io';
@@ -64,6 +66,14 @@ export default function Sidebar({
         >
           <FaBomb className="sb-icon" />
           {!collapsed && 'Mines'}
+        </button>
+
+        <button
+          className={`sb-item ${game === 'higherOrLower' ? 'active' : ''}`}
+          onClick={() => setGame('higherOrLower')}
+        >
+          <FaSortAmountUp className="sb-icon" />
+          {!collapsed && 'Higher/Lower'}
         </button>
       </nav>
 
