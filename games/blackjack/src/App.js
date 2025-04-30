@@ -1,3 +1,4 @@
+// src/App.js
 import React, { useState, useEffect, useRef } from 'react';
 import { FaSun } from 'react-icons/fa';
 import { IoMdMoon } from 'react-icons/io';
@@ -17,6 +18,7 @@ import Plinko from './plinko/plinko';
 import HeadsAndTails from './HeadsAndTails/HeadsAndTails';
 import DiceGame from './dice/dice';
 import Mines from './mines/mines';
+import HigherOrLower from './HigherOrLower/HigherOrLower';
 import './index.css';
 
 function Modal({ message, onClose }) {
@@ -181,6 +183,11 @@ export default function App() {
     setBalance(b => Math.ceil(b - amt));
   };
 
+  // --- HigherOrLower ---
+  const handleHigherBet = amt => {
+    setBalance(b => Math.ceil(b - amt));
+  };
+
   const renderBlackjack = () => (
     <>
       <div className="tables">
@@ -242,17 +249,14 @@ export default function App() {
         </header>
 
         <section className="game-area">
-          {game === 'blackjack' ? (
-            renderBlackjack()
-          ) : game === 'plinko' ? (
-            <Plinko balance={balance} onBet={handlePlinkoBet} showModal={showModal} />
-          ) : game === 'headsAndTails' ? (
-            <HeadsAndTails balance={balance} onBet={handleHeadsBet} showModal={showModal} />
-          ) : game === 'dice' ? (
-            <DiceGame balance={balance} onBet={handleDiceBet} showModal={showModal} />
-          ) : (
-            <Mines balance={balance} onBet={handleMinesBet} showModal={showModal} />
-          )}
+          {game === 'blackjack'      ? renderBlackjack()
+           : game === 'plinko'        ? <Plinko        balance={balance} onBet={handlePlinkoBet}    showModal={showModal}/>
+           : game === 'headsAndTails' ? <HeadsAndTails balance={balance} onBet={handleHeadsBet}     showModal={showModal}/>
+           : game === 'dice'          ? <DiceGame      balance={balance} onBet={handleDiceBet}      showModal={showModal}/>
+           : game === 'mines'         ? <Mines         balance={balance} onBet={handleMinesBet}     showModal={showModal}/>
+           : game === 'higherOrLower' ? <HigherOrLower balance={balance} onBet={handleHigherBet}   showModal={showModal}/>
+           : null
+          }
         </section>
       </div>
     </>
