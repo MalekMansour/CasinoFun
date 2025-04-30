@@ -1,4 +1,3 @@
-// src/mines/mines.js
 import React, { useState, useMemo } from 'react';
 import BetForm from '../components/BetForm';
 import './mines.css';
