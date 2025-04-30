@@ -1,4 +1,3 @@
-// src/dice/dice.js
 import React, { useState } from 'react';
 import BetForm from '../components/BetForm';
 import {
