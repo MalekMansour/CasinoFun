@@ -1,9 +1,25 @@
+// src/HigherOrLower/HigherOrLower.js
 import React, { useState } from 'react';
 import BetForm from '../components/BetForm';
+import Card from '../components/card';
 import './HigherOrLower.css';
 
-const cards = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A'];
-const cardValue = c => (typeof c === 'number' ? c : { J: 11, Q: 12, K: 13, A: 14 }[c]);
+// Ranks and suits
+const RANKS = [2,3,4,5,6,7,8,9,10,'J','Q','K','A'];
+const SUITS = ['♠','♥','♦','♣'];
+
+// Helper to compare rank values
+const cardValue = c =>
+  typeof c.rank === 'number'
+    ? c.rank
+    : { J:11, Q:12, K:13, A:14 }[c.rank];
+
+// Draw a random full card object
+function drawCard() {
+  const rank = RANKS[Math.floor(Math.random() * RANKS.length)];
+  const suit = SUITS[Math.floor(Math.random() * SUITS.length)];
+  return { rank, suit };
+}
 
 export default function HigherOrLower({ balance, onBet, showModal }) {
   const [bet, setBet] = useState(null);
@@ -13,25 +29,24 @@ export default function HigherOrLower({ balance, onBet, showModal }) {
   const [history, setHistory] = useState([]);
   const [lost, setLost] = useState(false);
 
-  const drawCard = () => cards[Math.floor(Math.random() * cards.length)];
-
   const startGame = amt => {
     onBet(amt);
-    const card = drawCard();
+    const first = drawCard();
     setBet(amt);
-    setCurrentCard(card);
+    setCurrentCard(first);
     setNextCard(null);
     setMultiplier(1.1);
-    setHistory([card]);
+    setHistory([first]);
     setLost(false);
   };
 
   const guess = dir => {
     const next = drawCard();
     setNextCard(next);
+
     const win =
-      (dir === 'higher' && cardValue(next) > cardValue(currentCard)) ||
-      (dir === 'lower' && cardValue(next) < cardValue(currentCard));
+      (dir === 'higher' && cardValue(next) >  cardValue(currentCard)) ||
+      (dir === 'lower'  && cardValue(next) <  cardValue(currentCard));
 
     if (win) {
       setMultiplier(m => parseFloat((m + 0.2).toFixed(2)));
@@ -65,26 +80,47 @@ export default function HigherOrLower({ balance, onBet, showModal }) {
         <BetForm balance={balance} onBet={startGame} showModal={showModal} />
       ) : (
         <div className="hol-game">
-          <p>Current Card: <strong>{currentCard}</strong></p>
+          <div className="hol-current">
+            <p>Current Card:</p>
+            <Card card={currentCard} />
+          </div>
+
           <div className="hol-buttons">
             <button onClick={() => guess('higher')} disabled={lost}>
               Higher
             </button>
-            <button onClick={() => guess('lower')} disabled={lost}>
+            <button onClick={() => guess('lower')}  disabled={lost}>
               Lower
             </button>
           </div>
-          {nextCard !== null && (
-            <p>Next Card: <strong>{nextCard}</strong></p>
+
+          {nextCard && (
+            <div className="hol-next">
+              <p>Next Card:</p>
+              <Card card={nextCard} />
+            </div>
           )}
-          <p>Multiplier: ×{multiplier.toFixed(2)}</p>
+
+          <p className="hol-mult">Multiplier: ×{multiplier.toFixed(2)}</p>
+
           {lost ? (
-            <button onClick={reset}>Try Again</button>
+            <button className="hol-action" onClick={reset}>
+              Try Again
+            </button>
           ) : (
-            <button onClick={cashOut}>Cash Out</button>
+            <button className="hol-action" onClick={cashOut}>
+              Cash Out
+            </button>
           )}
+
           <div className="hol-history">
-            History: {history.join(' → ')}
+            History:&nbsp;
+            {history.map((c, i) => (
+              <React.Fragment key={i}>
+                <Card card={c} />
+                {i < history.length - 1 && ' → '}
+              </React.Fragment>
+            ))}
           </div>
         </div>
       )}
