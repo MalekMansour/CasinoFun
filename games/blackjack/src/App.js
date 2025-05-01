@@ -19,6 +19,7 @@ import HeadsAndTails from './HeadsAndTails/HeadsAndTails';
 import DiceGame from './dice/dice';
 import Mines from './mines/mines';
 import HigherOrLower from './HigherOrLower/HigherOrLower';
+import Crash from './Crash/Crash';
 import './index.css';
 
 function Modal({ message, onClose }) {
@@ -188,6 +189,11 @@ export default function App() {
     setBalance(b => Math.ceil(b - amt));
   };
 
+  // --- Crash ---
+  const handleCrashBet = amt => {
+    setBalance(b => Math.ceil(b - amt));
+  };
+
   const renderBlackjack = () => (
     <>
       <div className="tables">
@@ -255,6 +261,7 @@ export default function App() {
            : game === 'dice'          ? <DiceGame      balance={balance} onBet={handleDiceBet}      showModal={showModal}/>
            : game === 'mines'         ? <Mines         balance={balance} onBet={handleMinesBet}     showModal={showModal}/>
            : game === 'higherOrLower' ? <HigherOrLower balance={balance} onBet={handleHigherBet}   showModal={showModal}/>
+           : game === 'crash'         ? <Crash         balance={balance} onBet={handleCrashBet}     showModal={showModal}/>
            : null
           }
         </section>
