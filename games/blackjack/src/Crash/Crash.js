@@ -1,82 +1,85 @@
+// src/Crash/Crash.js
 import React, { useState, useEffect, useRef } from 'react';
 import BetForm from '../components/BetForm';
 import './crash.css';
 
 export default function Crash({ balance, onBet, showModal }) {
   const [bet, setBet] = useState(null);
-  const [multiplier, setMultiplier] = useState(0);
-  const [crashAt, setCrashAt] = useState(null);
+  const [multiplier, setMultiplier] = useState(1.0);
   const [crashed, setCrashed] = useState(false);
   const [cashedOut, setCashedOut] = useState(false);
   const intervalRef = useRef(null);
 
-  // start round
+  // start a new round
   const start = amt => {
     onBet(amt);
     setBet(amt);
-    setMultiplier(0);
+    setMultiplier(1.0);
     setCrashed(false);
     setCashedOut(false);
-    // pick a crash point between 1× and 5000×
-    setCrashAt(Math.random() * (5000 - 1) + 1);
   };
 
-  // drive multiplier upward until crash
+  // grow multiplier by +0.01 every 50ms, with a 6% chance to crash each step
   useEffect(() => {
     if (bet == null) return;
     intervalRef.current = setInterval(() => {
       setMultiplier(prev => {
-        const next = prev === 0 ? 1.0 : parseFloat((prev + 0.1).toFixed(1));
-        if (next >= crashAt) {
-          clearInterval(intervalRef.current);
-          setCrashed(true);
-        }
+        const next = parseFloat((prev + 0.01).toFixed(2));
         return next;
       });
-    }, 200);
-    return () => clearInterval(intervalRef.current);
-  }, [bet, crashAt]);
+      if (Math.random() < 0.06) {
+        clearInterval(intervalRef.current);
+        setCrashed(true);
+      }
+    }, 50);
 
-  // cash out early
+    return () => clearInterval(intervalRef.current);
+  }, [bet]);
+
+  // cash out before crash
   const cashOut = () => {
     if (crashed || cashedOut) return;
     clearInterval(intervalRef.current);
     setCashedOut(true);
     const payout = Math.ceil(bet * multiplier);
     onBet(-payout);
-    showModal(`Cashed out at ×${multiplier.toFixed(1)} for $${payout}`);
+    showModal(`Cashed out at ×${multiplier.toFixed(2)} for $${payout}`);
   };
 
-  // reset for next round
+  // reset for replay
   const reset = () => {
     clearInterval(intervalRef.current);
     setBet(null);
-    setMultiplier(0);
-    setCrashAt(null);
+    setMultiplier(1.0);
     setCrashed(false);
     setCashedOut(false);
   };
 
   return (
     <div className="crash-container">
+      <h2 className="crash-title">Crash</h2>
+
       {!bet ? (
         <BetForm balance={balance} onBet={start} showModal={showModal} />
       ) : (
         <div className="crash-game">
           <div className={`crash-display ${crashed ? 'crashed' : ''}`}>
-            {multiplier.toFixed(1)}×
+            {multiplier.toFixed(2)}×
           </div>
-          {crashed ? (
-            <button className="crash-reset" onClick={reset}>
-              Play Again
-            </button>
-          ) : (
+
+          {(!crashed && !cashedOut) ? (
             <button
               className="crash-cashout"
               onClick={cashOut}
-              disabled={cashedOut}
             >
               Cash Out
+            </button>
+          ) : (
+            <button
+              className="crash-replay"
+              onClick={reset}
+            >
+              Replay
             </button>
           )}
         </div>
