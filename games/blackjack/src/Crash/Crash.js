@@ -19,7 +19,6 @@ export default function Crash({ balance, onBet, showModal }) {
     setCashedOut(false);
   };
 
-  // grow multiplier by +0.01 every 50ms, with a 6% chance to crash each step
   useEffect(() => {
     if (bet == null) return;
     intervalRef.current = setInterval(() => {
@@ -27,7 +26,7 @@ export default function Crash({ balance, onBet, showModal }) {
         const next = parseFloat((prev + 0.01).toFixed(2));
         return next;
       });
-      if (Math.random() < 0.06) {
+      if (Math.random() < 0.005) {
         clearInterval(intervalRef.current);
         setCrashed(true);
       }
