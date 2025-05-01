@@ -49,7 +49,7 @@ export default function Sidebar({
           onClick={() => setGame('headsAndTails')}
         >
           <GiTwoCoins className="sb-icon" />
-          {!collapsed && 'Heads & Tails'}
+          {!collapsed && 'Heads Or Tails'}
         </button>
 
         <button
