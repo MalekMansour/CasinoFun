@@ -1,0 +1,30 @@
+.crash-container {
+    text-align: center;
+    padding: 1rem;
+  }
+  
+  .crash-display {
+    font-size: 3rem;
+    margin: 1rem 0;
+    transition: color 0.2s ease;
+  }
+  
+  .crash-display.crashed {
+    color: red;
+  }
+  
+  .crash-game button {
+    margin: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    background: pink;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .crash-game button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
