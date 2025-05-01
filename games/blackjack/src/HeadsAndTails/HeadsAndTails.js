@@ -12,7 +12,7 @@ export default function HeadsAndTails({ balance, onBet, showModal }) {
     if (!choice) return showModal('Please select Heads or Tails.');
     setBetAmount(amt);
     setResult(null);
-    onBet(amt); // deduct stake
+    onBet(amt);
 
     setTimeout(() => {
       // Determine win or loss
@@ -35,6 +35,8 @@ export default function HeadsAndTails({ balance, onBet, showModal }) {
 
   return (
     <div className="ht-container">
+            <h2 className="headsandtails-title">Heads Or Tails</h2>
+
       {/* Choice buttons */}
       <div className="choice-container">
         <label>
