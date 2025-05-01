@@ -3,6 +3,17 @@
     padding: 1rem;
   }
   
+  .crash-title {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+  }
+  
+  .crash-game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
   .crash-display {
     font-size: 3rem;
     margin: 1rem 0;
@@ -13,7 +24,8 @@
     color: red;
   }
   
-  .crash-game button {
+  .crash-cashout,
+  .crash-replay {
     margin: 0.5rem;
     padding: 0.6rem 1.2rem;
     font-size: 1rem;
@@ -23,7 +35,8 @@
     cursor: pointer;
   }
   
-  .crash-game button:disabled {
+  .crash-cashout:disabled,
+  .crash-replay:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
