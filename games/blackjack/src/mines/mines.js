@@ -67,6 +67,8 @@ export default function Mines({ balance, onBet, showModal }) {
   return (
     <div className="mines-container">
       <div className="mines-controls">
+      <h2 className="mines-title">Mines</h2>
+
         <label>
           Mines:
           <select
