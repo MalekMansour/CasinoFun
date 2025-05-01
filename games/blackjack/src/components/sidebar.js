@@ -5,7 +5,8 @@ import {
   FaCircle,
   FaDice,
   FaBomb,
-  FaSortAmountUp
+  FaSortAmountUp,
+  FaChartLine
 } from 'react-icons/fa';
 import { GiPokerHand, GiTwoCoins } from 'react-icons/gi';
 import { IoIosExit } from 'react-icons/io';
@@ -73,6 +74,14 @@ export default function Sidebar({
         >
           <FaSortAmountUp className="sb-icon" />
           {!collapsed && 'Higher/Lower'}
+        </button>
+
+        <button
+          className={`sb-item ${game === 'crash' ? 'active' : ''}`}
+          onClick={() => setGame('crash')}
+        >
+          <FaChartLine className="sb-icon" />
+          {!collapsed && 'Crash'}
         </button>
       </nav>
 
