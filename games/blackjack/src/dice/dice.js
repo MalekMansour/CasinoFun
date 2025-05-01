@@ -70,6 +70,8 @@ export default function DiceGame({ balance, onBet, showModal }) {
 
   return (
     <div className="dice-container">
+            <h2 className="dice-title">Dice</h2>
+
       {!betAmount ? (
         <>
           <div className="dice-pick">
