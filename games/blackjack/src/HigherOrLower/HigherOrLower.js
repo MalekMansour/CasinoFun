@@ -74,6 +74,8 @@ export default function HigherOrLower({ balance, onBet, showModal }) {
 
   return (
     <div className="hol-container">
+            <h2 className="hol-title">Higher Or Lower</h2>
+
       {!bet ? (
         <BetForm balance={balance} onBet={startGame} showModal={showModal} />
       ) : (
