@@ -24,7 +24,6 @@ export default function Crash({ balance, onBet, showModal }) {
 
     intervalRef.current = setInterval(() => {
       setMultiplier(prev => {
-        // determine crash probability by range
         let crashChance;
         if (prev < 1.20)         crashChance = 0.02;    // 2%
         else if (prev < 2.00)    crashChance = 0.005;   // 0.5%
