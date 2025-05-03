@@ -50,8 +50,7 @@ export default function Crash({ balance, onBet, showModal }) {
     return () => clearInterval(intervalRef.current);
   }, [bet]);
 
-  // cash out pre-crash
-  const cashOut = () => {
+x  const cashOut = () => {
     if (crashed || cashedOut) return;
     clearInterval(intervalRef.current);
     setCashedOut(true);
