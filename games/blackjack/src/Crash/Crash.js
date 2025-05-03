@@ -50,7 +50,7 @@ export default function Crash({ balance, onBet, showModal }) {
     return () => clearInterval(intervalRef.current);
   }, [bet]);
 
-x  const cashOut = () => {
+  const cashOut = () => {
     if (crashed || cashedOut) return;
     clearInterval(intervalRef.current);
     setCashedOut(true);
@@ -59,7 +59,6 @@ x  const cashOut = () => {
     showModal(`Cashed out at ×${multiplier.toFixed(2)} for $${payout}`);
   };
 
-  // reset for replay
   const reset = () => {
     clearInterval(intervalRef.current);
     setBet(null);
