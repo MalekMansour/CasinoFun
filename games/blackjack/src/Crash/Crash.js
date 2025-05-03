@@ -19,7 +19,6 @@ export default function Crash({ balance, onBet, showModal }) {
     setCashedOut(false);
   };
 
-  // ramp multiplier and potentially crash
   useEffect(() => {
     if (bet == null) return;
 
