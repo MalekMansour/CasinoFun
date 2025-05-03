@@ -10,7 +10,6 @@ export default function Crash({ balance, onBet, showModal }) {
   const [cashedOut, setCashedOut] = useState(false);
   const intervalRef = useRef(null);
 
-  // start a new round
   const start = amt => {
     onBet(amt);
     setBet(amt);
