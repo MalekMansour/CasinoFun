@@ -39,10 +39,9 @@ export default function Crash({ balance, onBet, showModal }) {
           clearInterval(intervalRef.current);
           setCrashed(true);
           setCrashPoint(prev);
-          return prev; // hold at crash value
+          return prev; 
         }
 
-        // otherwise bump by 0.01
         return parseFloat((prev + 0.01).toFixed(2));
       });
     }, 50);
