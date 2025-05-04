@@ -18,7 +18,7 @@ export default function HeadsAndTails({ balance, onBet, showModal }) {
       const won = Math.random() < winChance;
       if (won) {
         setResult('win');
-        onBet(-(amt * 2));              // credit 2x payout
+        onBet(-(amt * 2));              
         setWinChance(c => Math.max(0, c - 0.02)); // -2%
       } else {
         setResult('lose');
