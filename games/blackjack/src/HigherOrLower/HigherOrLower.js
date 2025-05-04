@@ -12,7 +12,6 @@ const cardValue = c =>
     ? c.rank
     : { J:11, Q:12, K:13, A:14 }[c.rank];
 
-// Draw a random full card object
 function drawCard() {
   const rank = RANKS[Math.floor(Math.random() * RANKS.length)];
   const suit = SUITS[Math.floor(Math.random() * SUITS.length)];
