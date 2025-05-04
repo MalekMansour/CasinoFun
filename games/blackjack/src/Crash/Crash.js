@@ -32,7 +32,7 @@ export default function Crash({ balance, onBet, showModal }) {
         else if (prev < 50.0)    crashChance = 0.0002;  // 0.02%
         else                     crashChance = 0.00005;// 0.005%
 
-X        if (Math.random() < crashChance) {
+        if (Math.random() < crashChance) {
           clearInterval(intervalRef.current);
           setCrashed(true);
           setCrashPoint(prev);
