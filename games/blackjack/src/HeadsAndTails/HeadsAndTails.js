@@ -5,7 +5,7 @@ import './HeadsAndTails.css';
 export default function HeadsAndTails({ balance, onBet, showModal }) {
   const [betAmount, setBetAmount] = useState(null);
   const [choice, setChoice] = useState('heads');
-  const [result, setResult] = useState(null); // 'win' or 'lose'
+  const [result, setResult] = useState(null); 
   const [winChance, setWinChance] = useState(0.5);
 
   const handleFlip = amt => {
