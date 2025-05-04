@@ -1,2 +1,3 @@
 Inside of this assets folder contains 
 background.mp3 
+logo.png
