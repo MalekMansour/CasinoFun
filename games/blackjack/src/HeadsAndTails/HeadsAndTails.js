@@ -15,7 +15,6 @@ export default function HeadsAndTails({ balance, onBet, showModal }) {
     onBet(amt);
 
     setTimeout(() => {
-      // Determine win or loss
       const won = Math.random() < winChance;
       if (won) {
         setResult('win');
