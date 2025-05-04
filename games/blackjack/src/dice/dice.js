@@ -32,7 +32,7 @@ export default function DiceGame({ balance, onBet, showModal }) {
     setBetAmount(amt);
     setRoll(null);
     setMultiplier(null);
-    onBet(amt); // deduct stake immediately
+    onBet(amt); 
 
     setTimeout(() => {
       const d1 = Math.ceil(Math.random() * 6);
