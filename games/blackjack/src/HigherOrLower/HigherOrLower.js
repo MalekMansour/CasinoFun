@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import BetForm from '../components/BetForm';
-import Card from '../components/card';
+import Card from '../components/Card';
 import './HigherOrLower.css';
 
 // Ranks and suits
