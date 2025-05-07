@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import BetForm from '../components/BetForm';
-import './crash.css';
+import './Crash.css';
 
 export default function Crash({ balance, onBet, showModal }) {
   const [bet, setBet] = useState(null);
