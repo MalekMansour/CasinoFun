@@ -1,4 +1,4 @@
-/* ─── Theme variables */
+/* Theme variables */
 body {
   --bg-color: #0F212E;
   --text-color: #fff;
@@ -16,7 +16,7 @@ body.light-mode {
   --card-border-color: #000;
 }
 
-/* ─── Sidebar ────────────────────────────────────────────────────────── */
+/* Sidebar */
 .sidebar {
   position: fixed;
   top: 0;
