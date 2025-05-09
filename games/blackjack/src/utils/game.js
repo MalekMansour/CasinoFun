@@ -44,5 +44,5 @@ export function shouldDealerHit(dealerHand, playerHand, difficulty, deck){
     const prob = bustCount / deck.length;
     return dVal < 17 && (dVal < pVal || prob < 0.4);
   }
-  return dVal < 17; // medium
+  return dVal < 17; 
 }
