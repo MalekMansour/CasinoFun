@@ -55,7 +55,6 @@ export default function App() {
   const [game, setGame] = useState('blackjack');
   const diff = 'medium';
 
-  // Bailout: wait 3 seconds after balance ≤ 1, then top up to $1,000
   useEffect(() => {
     if (currentSave && balance <= 1) {
       const timer = setTimeout(() => {
