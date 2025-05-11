@@ -31,3 +31,7 @@ A simple, browser-based online casino with all your favorites in one place.
    npm start
    ```
 
+
+## Bugs
+
+There is a bug that happens when yo8u run out of money it gives you money right away even if you win your bet.
