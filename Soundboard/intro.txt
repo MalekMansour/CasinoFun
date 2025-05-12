@@ -1,0 +1,3 @@
+# Soundboard
+
+You can upload sounds and use shortcuts to play those sounds through your computer.
