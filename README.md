@@ -12,26 +12,6 @@ A simple, browser-based online casino with all your favorites in one place.
 * **Crash**: Cash out before the multiplier crashes.
 * **Higher or Lower**: Predict if the next value is higher or lower.
 
-## Getting Started
-
-1. Clone:
-
-   ```bash
-   git clone https://github.com/yourusername/CasinoFun.git
-   cd CasinoFun
-   ```
-2. Install:
-
-   ```bash
-   npm install
-   ```
-3. Run:
-
-   ```bash
-   npm start
-   ```
-
-
 ## Bugs
 
 There is a bug that happens when you run out of money it gives you money right away even if you win your bet.
