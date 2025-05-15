@@ -1,6 +1,6 @@
 # CasinoFun
 
-A simple, browser-based online casino with all your favorites in one place.
+A simple, browser-based online simulator casino with all your favorites in one place.
 
 ## Games
 
