@@ -334,7 +334,7 @@ body.light-mode {
   width: 30%;  
 }
 
-/* --- Popup panel for New/Load --- */
+/* Popup panel for New/Load */
 .menu-panel {
   position: absolute;
   top: 50%; left: 50%;
