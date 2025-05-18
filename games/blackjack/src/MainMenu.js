@@ -9,7 +9,6 @@ export default function MainMenu({ onLoad, showModal }) {
   const [showNew, setShowNew] = useState(false);
   const [showLoad, setShowLoad] = useState(false);
 
-  // load save keys from localStorage
   useEffect(() => {
     const keys = Object.keys(localStorage)
       .filter(k => k.startsWith('Save_File_'))
@@ -43,7 +42,6 @@ export default function MainMenu({ onLoad, showModal }) {
     const data = { username: name, balance: 1000 };
     localStorage.setItem(key, JSON.stringify(data));
     onLoad(key, data);
-    // after onLoad, App swaps to the game screen
   };
 
   const loadSave = key => {
