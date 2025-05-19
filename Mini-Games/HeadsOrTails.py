@@ -3,10 +3,11 @@ import random
 def heads_or_tails():
     print("Welcome to Heads or Tails!")
     choices = ['heads', 'tails']
-    user_choice = input("Choose heads or tails: ").strip().lower()
-    if user_choice not in choices:
+    while True:
+        user_choice = input("Choose heads or tails: ").strip().lower()
+        if user_choice in choices:
+            break
         print("Invalid choice. Please choose 'heads' or 'tails'.")
-        return
 
     result = random.choice(choices)
     print(f"The coin landed on: {result}")
