@@ -3,7 +3,7 @@ import random
 CHOICES = ['heads', 'tails']
 STARTING_BALANCE = 100
 MIN_BET = 1
-STARTING_WIN_CHANCE = 0.5  # 50%
+STARTING_WIN_CHANCE = 0.5  
 WIN_CHANCE_STEP = 0.02     
 
 def get_bet(balance):
