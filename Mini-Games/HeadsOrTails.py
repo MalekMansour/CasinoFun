@@ -30,7 +30,6 @@ def play_round(balance, win_chance):
     bet = get_bet(balance)
     user_choice = get_user_choice()
 
-    # Determine if user wins based on win_chance
     if random.random() < win_chance:
         result = user_choice
     else:
