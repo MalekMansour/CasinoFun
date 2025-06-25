@@ -50,7 +50,6 @@ def main():
             if money >= quota:
                 print("Congratulations! You met the quota and advance to the next cycle.\n")
                 cycle += 1
-                # Increase quota for next cycle (adjust factor as desired)
                 quota *= 1.5
                 print(f"New quota: ${quota:.2f}\n")
             else:
