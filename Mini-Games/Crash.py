@@ -4,9 +4,10 @@ import time
 def crash_game():
     print("Welcome to Crash!")
     balance = 100.0
+    high_score = balance
 
     while True:
-        print(f"\nYour balance: ${balance:.2f}")
+        print(f"\nYour balance: ${balance:.2f} | High Score: ${high_score:.2f}")
         try:
             bet = float(input("Enter your bet (0 to quit): "))
         except ValueError:
@@ -33,6 +34,9 @@ def crash_game():
                 winnings = round(bet * multiplier, 2)
                 balance += winnings - bet
                 print(f"\nYou cashed out at x{multiplier}! You won ${winnings:.2f}")
+                if balance > high_score:
+                    high_score = balance
+                    print("🎉 New High Score! 🎉")
                 break
             if multiplier >= crash_point:
                 print(f"\nCrashed at x{crash_point}! You lost your bet.")
@@ -42,6 +46,12 @@ def crash_game():
 
         if balance <= 0:
             print("You are out of money! Game over.")
+            break
+
+        # Offer to play again or quit
+        again = input("Play again? (y/n): ").strip().lower()
+        if again != 'y':
+            print("Thanks for playing!")
             break
 
 if __name__ == "__main__":
