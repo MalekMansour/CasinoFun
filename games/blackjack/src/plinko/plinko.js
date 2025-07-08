@@ -94,7 +94,6 @@ export default function Plinko({ balance, onBet, showModal }) {
         )}
       </div>
 
-      {/* before drop */}
       {betAmount == null && (
         <BetForm balance={balance} onBet={handleBet} showModal={showModal} />
       )}
