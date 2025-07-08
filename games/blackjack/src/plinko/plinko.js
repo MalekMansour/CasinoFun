@@ -86,7 +86,6 @@ export default function Plinko({ balance, onBet, showModal }) {
           });
         })}
 
-        {/* ball */}
         {betAmount != null && (
           <div
             className="ball"
