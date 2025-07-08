@@ -44,7 +44,6 @@ export default function Plinko({ balance, onBet, showModal }) {
       setTimeout(() => setBallPos(pos), (i + 1) * stepDur);
     });
 
-    // after animation, set result and pay out immediately
     setTimeout(() => {
       setResultMultiplier(pick);
       onBet(-(amt * pick));  // credit winnings
