@@ -19,9 +19,8 @@ export default function Plinko({ balance, onBet, showModal }) {
     setBetAmount(amt);
     setResultMultiplier(null);
     setBallPos({ left: 50, top: 0 });
-    onBet(amt); // deduct stake immediately
+    onBet(amt); 
 
-    // pick a bin by weight
     const totalW = weights.reduce((a,b)=>a+b, 0);
     let r = Math.random() * totalW, acc = 0, pickIdx = 0;
     for (let i = 0; i < weights.length; i++) {
