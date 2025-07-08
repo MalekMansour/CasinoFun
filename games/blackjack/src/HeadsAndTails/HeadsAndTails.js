@@ -55,7 +55,6 @@ export default function HeadsAndTails({ balance, onBet, showModal }) {
         </label>
       </div>
 
-      {/* Bet form */}
       {!betAmount && (
         <BetForm
           balance={balance}
