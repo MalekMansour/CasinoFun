@@ -19,10 +19,10 @@ export default function HeadsAndTails({ balance, onBet, showModal }) {
       if (won) {
         setResult('win');
         onBet(-(amt * 2));              
-        setWinChance(c => Math.max(0, c - 0.02)); // -2%
+        setWinChance(c => Math.max(0, c - 0.02)); 
       } else {
         setResult('lose');
-        setWinChance(c => Math.min(1, c + 0.02)); // +2%
+        setWinChance(c => Math.min(1, c + 0.02)); 
       }
     }, 500);
   };
