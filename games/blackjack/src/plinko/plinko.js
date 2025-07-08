@@ -71,7 +71,6 @@ export default function Plinko({ balance, onBet, showModal }) {
           </div>
         ))}
 
-        {/* pegs */}
         {Array.from({ length: rows }).flatMap((_, ri) => {
           const offset = ri % 2 === 0 ? binWidthPct / 2 : 0;
           return Array.from({ length: binCount - 1 }).map((__, pj) => {
