@@ -63,7 +63,6 @@ export default function HeadsAndTails({ balance, onBet, showModal }) {
         />
       )}
 
-      {/* Flipping indicator */}
       {betAmount && result === null && (
         <p className="flip-msg">
           Flipping the coin… (Win chance: {Math.round(winChance*100)}%)
