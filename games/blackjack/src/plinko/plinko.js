@@ -30,7 +30,6 @@ export default function Plinko({ balance, onBet, showModal }) {
     const pick = multipliers[pickIdx];
     const finalX = pickIdx * binWidthPct + binWidthPct / 2;
 
-    // build path
     const path = [];
     for (let i = 0; i < rows; i++) {
       const t = (i + 1) / (rows + 1);
@@ -41,7 +40,6 @@ export default function Plinko({ balance, onBet, showModal }) {
     }
     path.push({ left: finalX, top: 100 });
 
-    // animate
     path.forEach((pos, i) => {
       setTimeout(() => setBallPos(pos), (i + 1) * stepDur);
     });
