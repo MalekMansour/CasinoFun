@@ -98,7 +98,6 @@ export default function Plinko({ balance, onBet, showModal }) {
         <BetForm balance={balance} onBet={handleBet} showModal={showModal} />
       )}
 
-      {/* dropping */}
       {betAmount != null && resultMultiplier == null && (
         <p className="plinko-dropping">Dropping the ball…</p>
       )}
