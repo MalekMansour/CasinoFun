@@ -36,7 +36,6 @@ export default function HeadsAndTails({ balance, onBet, showModal }) {
     <div className="ht-container">
             <h2 className="headsandtails-title">Heads Or Tails</h2>
 
-      {/* Choice buttons */}
       <div className="choice-container">
         <label>
           <input
