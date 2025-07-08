@@ -46,7 +46,7 @@ export default function Plinko({ balance, onBet, showModal }) {
 
     setTimeout(() => {
       setResultMultiplier(pick);
-      onBet(-(amt * pick));  // credit winnings
+      onBet(-(amt * pick)); 
     }, (path.length + 1) * stepDur);
   };
 
