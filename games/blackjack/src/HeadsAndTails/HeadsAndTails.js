@@ -69,7 +69,6 @@ export default function HeadsAndTails({ balance, onBet, showModal }) {
         </p>
       )}
 
-      {/* Result & Play Again */}
       {result && (
         <div className="result-container">
           <p>
