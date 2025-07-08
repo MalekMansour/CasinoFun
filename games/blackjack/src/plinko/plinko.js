@@ -102,7 +102,6 @@ export default function Plinko({ balance, onBet, showModal }) {
         <p className="plinko-dropping">Dropping the ball…</p>
       )}
 
-      {/* result: immediate payout, just Play Again */}
       {resultMultiplier != null && (
         <div className="plinko-result">
           <p>You landed on <strong>{resultMultiplier}×</strong>!</p>
