@@ -60,7 +60,6 @@ export default function Plinko({ balance, onBet, showModal }) {
     <div className="plinko-container">
             <h2 className="plinko-title">Plinko</h2>
 
-      {/* board */}
       <div className="plinko-board">
         {multipliers.map((m, i) => (
           <div
