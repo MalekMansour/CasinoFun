@@ -81,7 +81,6 @@ export default function App() {
     document.body.classList.toggle('light-mode', !darkMode);
   }, [darkMode]);
 
-  // Persist save
   useEffect(() => {
     if (currentSave) {
       localStorage.setItem(
