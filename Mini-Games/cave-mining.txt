@@ -1,4 +1,5 @@
-	A Cave Diving Experience on Unity. 
+Cave Diving Experience on Unity. 
+
 Pickaxe Upgrades:
 Stone -> Copper -> Iron -> Gold -> Diamond
 
