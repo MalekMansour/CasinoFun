@@ -10,3 +10,4 @@ Personal Chest Upgrades:
 
 Suits:
 Scuba Diving Suit: 35,000
+Thermal Suit: 65,000
