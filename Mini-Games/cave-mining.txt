@@ -16,5 +16,7 @@ Scuba Diving Suit: $35,000
 Thermal Suit: $65,000
 Fur Suit: $95,000
 
-Camera: 18,000
-Rope: 6,000
+Camera: $18,000
+Can take photos. Up to 25 photos max. You can delete photos and print photos to stick them to walls.
+
+Rope: $6,000
