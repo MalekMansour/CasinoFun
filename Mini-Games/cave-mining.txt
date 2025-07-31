@@ -15,3 +15,4 @@ Thermal Suit: 65,000
 Fur Suit: 95,000
 
 Camera: 18,000
+Rope: 6,000
