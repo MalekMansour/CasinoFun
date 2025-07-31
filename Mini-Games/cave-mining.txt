@@ -7,3 +7,6 @@ Backpack Upgrades:
 
 Personal Chest Upgrades:
 30 -> 60 -> 90 -> 120 -> 150
+
+Suits:
+Scuba Diving Suit: 35,000
