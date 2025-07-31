@@ -12,9 +12,9 @@ $3000 -> $12,000 -> $36,000 -> $60,000
 30 -> 60 -> 90 -> 120 -> 150
 
 Suits:
-Scuba Diving Suit: 35,000
-Thermal Suit: 65,000
-Fur Suit: 95,000
+Scuba Diving Suit: $35,000
+Thermal Suit: $65,000
+Fur Suit: $95,000
 
 Camera: 18,000
 Rope: 6,000
