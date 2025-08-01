@@ -27,3 +27,6 @@ Used to fill up water and lava.
 
 Water Bucket: $56,000
 Used to fill up cave holes with water to rise up a body.
+
+Lava Bucket: $80,000
+Used as fuel for the furnace.
