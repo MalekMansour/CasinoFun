@@ -24,3 +24,6 @@ Used to pull your friends up from thight holes.
 
 Bucket: $45,000
 Used to fill up water and lava.
+
+Water Bucket: $56,000
+Used to fill up cave holes with water to rise up a body.
