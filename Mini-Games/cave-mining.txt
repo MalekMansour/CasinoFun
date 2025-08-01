@@ -30,3 +30,6 @@ Used to fill up cave holes with water to rise up a body.
 
 Lava Bucket: $80,000
 Used as fuel for the furnace.
+
+Beacon: $25,000
+Used as a marker to remember where some places are.
