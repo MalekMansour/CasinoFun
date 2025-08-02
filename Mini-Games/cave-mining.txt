@@ -33,3 +33,13 @@ Used as fuel for the furnace.
 
 Beacon: $25,000
 Used as a marker to remember where some places are.
+
+Areas: 24
+Easy
+Medium
+Hard
+Extreme
+Nutty Putty
+Bottomless
+Backrooms
+Poolrooms
