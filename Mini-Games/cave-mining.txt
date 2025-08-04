@@ -56,3 +56,5 @@ Furnace:
 Put coal inside and then insert the ores to smelt them into ingots. You can then use those ingots to upgrade your pickaxe.
 Copper Pickaxe: 4KG of Copper
 Iron Pickaxe: 10KG of Iron
+Gold Pickaxe: 24KG of Gold
+Diamond Pickaxe: 36KG of Diamond
