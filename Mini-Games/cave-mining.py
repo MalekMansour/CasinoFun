@@ -26,6 +26,7 @@ CHEST_UPGRADES = [
     {"capacity": 150, "cost": 60000},
 ]
 
+# Shop items
 SHOP_ITEMS = {
     "Water Bucket": 56000,
     "Lava Bucket": 80000,
@@ -89,7 +90,6 @@ class Player:
         print(f"\nYou explored {area} and found {yield_amount}kg of {ore_type} ore.")
         self.money += earnings
         print(f"You earned ${earnings} from selling surplus ore.")
-        # Add to backpack
         if len(self.backpack) < self.backpack_capacity:
             self.backpack.append((f"{ore_type} Ore", yield_amount))
             print(f"Ore added to backpack ({len(self.backpack)}/{self.backpack_capacity}).")
@@ -175,8 +175,9 @@ class Player:
             print("Not enough money.")
 
     def smelt(self):
-        if "Lava Bucket" not in self.items:
-            print("You need a Lava Bucket to fuel the furnace.")
+        # Allow fuel from Lava Bucket or Coal
+        if "Lava Bucket" not in self.items and "Coal" not in self.items:
+            print("You need a Lava Bucket or Coal to fuel the furnace.")
             return
         # Gather available ores in chest
         ore_inventory = {}
@@ -214,8 +215,13 @@ class Player:
             else:
                 new_chest.append((typ, amt))
         self.chest = new_chest
-        # Consume one Lava Bucket
-        self.items.remove("Lava Bucket")
+        # Consume fuel
+        if "Coal" in self.items:
+            self.items.remove("Coal")
+            print("Consumed 1 Coal to fuel the furnace.")
+        else:
+            self.items.remove("Lava Bucket")
+            print("Consumed 1 Lava Bucket to fuel the furnace.")
         # Add ingots
         self.ingots[ore_type] += amount
         print(f"Smelted {amount}kg of {ore_type} Ore into {amount}kg of {ore_type} Ingots.")
