@@ -1,15 +1,16 @@
 import random
 import sys
 
-# Upgrade definitions
+# Upgrade definitions (cost = required ingots to upgrade pickaxe)
 PICKAXE_UPGRADES = [
     {"name": "Stone", "efficiency": 1, "cost": 0},
-    {"name": "Copper", "efficiency": 1.5, "cost": 2000},
-    {"name": "Iron", "efficiency": 2, "cost": 8000},
-    {"name": "Gold", "efficiency": 2.5, "cost": 20000},
-    {"name": "Diamond", "efficiency": 3, "cost": 50000},
+    {"name": "Copper", "efficiency": 1.5, "cost": 4},   # 4kg Copper ingots
+    {"name": "Iron", "efficiency": 2, "cost": 10},    # 10kg Iron ingots
+    {"name": "Gold", "efficiency": 2.5, "cost": 24},   # 24kg Gold ingots
+    {"name": "Diamond", "efficiency": 3, "cost": 36}, # 36kg Diamond ingots
 ]
 
+# Backpack and chest upgrades
 BACKPACK_UPGRADES = [
     {"capacity": 100, "cost": 0},
     {"capacity": 150, "cost": 4000},
@@ -17,7 +18,6 @@ BACKPACK_UPGRADES = [
     {"capacity": 250, "cost": 24000},
     {"capacity": 300, "cost": 45000},
 ]
-
 CHEST_UPGRADES = [
     {"capacity": 30, "cost": 0},
     {"capacity": 60, "cost": 3000},
@@ -27,15 +27,13 @@ CHEST_UPGRADES = [
 ]
 
 SHOP_ITEMS = {
+    "Water Bucket": 56000,
+    "Lava Bucket": 80000,
+    "Bucket": 45000,
+    "Beacon": 25000,
     "Scuba Diving Suit": 35000,
     "Thermal Suit": 65000,
     "Fur Suit": 95000,
-    "Camera": 38000,
-    "Rope": 6000,
-    "Bucket": 45000,
-    "Water Bucket": 56000,
-    "Lava Bucket": 80000,
-    "Beacon": 25000,
 }
 
 AREAS = [
@@ -43,6 +41,9 @@ AREAS = [
     "Poolrooms", "Swamp", "Frozen Lake", "Lava Zone", "Hell Hole", "Thai Rescue",
     "Impossible", "The Lost River", "Red Cave"
 ]
+
+# Map pickaxe level to ore type
+ORE_TYPES = ["Copper", "Iron", "Gold", "Diamond"]
 
 class Player:
     def __init__(self):
@@ -54,8 +55,8 @@ class Player:
         self.chest = []
         self.suits = set()
         self.items = set()
-        self.photos = []
         self.beacons = []
+        self.ingots = {ore: 0 for ore in ORE_TYPES}
 
     @property
     def pickaxe(self):
@@ -82,14 +83,16 @@ class Player:
             print("Invalid choice.")
             return
         area = AREAS[int(choice)-1]
+        ore_type = ORE_TYPES[min(self.pickaxe_level, len(ORE_TYPES)-1)]
         yield_amount = int(random.randint(5, 15) * self.pickaxe_efficiency)
         earnings = yield_amount * 10
-        print(f"\nYou explored {area} and found {yield_amount} ore, earning ${earnings}.")
+        print(f"\nYou explored {area} and found {yield_amount}kg of {ore_type} ore.")
         self.money += earnings
+        print(f"You earned ${earnings} from selling surplus ore.")
         # Add to backpack
         if len(self.backpack) < self.backpack_capacity:
-            self.backpack.append(("ore", yield_amount))
-            print(f"Ore added to backpack (Total items: {len(self.backpack)}/{self.backpack_capacity}).")
+            self.backpack.append((f"{ore_type} Ore", yield_amount))
+            print(f"Ore added to backpack ({len(self.backpack)}/{self.backpack_capacity}).")
         else:
             print("Backpack full! Deposit to chest or empty backpack.")
 
@@ -99,9 +102,10 @@ class Player:
         print(f"Pickaxe: {self.pickaxe}")
         print(f"Backpack: {len(self.backpack)}/{self.backpack_capacity}")
         print(f"Chest: {len(self.chest)}/{self.chest_capacity}")
+        ingot_status = ", ".join(f"{ore}: {amt}kg" for ore, amt in self.ingots.items())
+        print(f"Ingots: {ingot_status}")
         print(f"Suits: {', '.join(self.suits) if self.suits else 'None'}")
         print(f"Items: {', '.join(self.items) if self.items else 'None'}")
-        print(f"Photos taken: {len(self.photos)}/25")
         print(f"Beacons placed: {len(self.beacons)}")
         print("==============")
 
@@ -115,13 +119,14 @@ class Player:
         if next_level >= len(PICKAXE_UPGRADES):
             print("Your pickaxe is at max level.")
             return
+        ore_type = PICKAXE_UPGRADES[next_level]["name"]
         cost = PICKAXE_UPGRADES[next_level]["cost"]
-        if self.money >= cost:
-            self.money -= cost
+        if self.ingots.get(ore_type, 0) >= cost:
+            self.ingots[ore_type] -= cost
             self.pickaxe_level = next_level
             print(f"Upgraded pickaxe to {self.pickaxe}.")
         else:
-            print(f"Need ${cost} to upgrade pickaxe.")
+            print(f"Need {cost}kg of {ore_type} ingots to upgrade pickaxe.")
 
     def upgrade_backpack(self):
         next_level = self.backpack_level + 1
@@ -169,30 +174,51 @@ class Player:
         else:
             print("Not enough money.")
 
-    def use_camera(self):
-        if "Camera" not in self.items:
-            print("You don't have a camera.")
+    def smelt(self):
+        if "Lava Bucket" not in self.items:
+            print("You need a Lava Bucket to fuel the furnace.")
             return
-        if len(self.photos) >= 25:
-            print("Photo memory full. Delete some first.")
+        # Gather available ores in chest
+        ore_inventory = {}
+        for typ, amt in self.chest:
+            if "Ore" in typ:
+                ore_type = typ.replace(" Ore", "")
+                ore_inventory[ore_type] = ore_inventory.get(ore_type, 0) + amt
+        if not ore_inventory:
+            print("No ore in chest to smelt.")
             return
-        photo_desc = input("Enter description for the photo: ")
-        self.photos.append(photo_desc)
-        print(f"Photo taken: '{photo_desc}'")
-
-    def delete_photo(self):
-        if not self.photos:
-            print("No photos to delete.")
-            return
-        print("\nPhotos:")
-        for idx, p in enumerate(self.photos, 1):
-            print(f"{idx}. {p}")
-        choice = input("Choose photo to delete (number): ")
-        if choice.isdigit() and 1 <= int(choice) <= len(self.photos):
-            removed = self.photos.pop(int(choice)-1)
-            print(f"Deleted photo: {removed}")
-        else:
+        print("\nOre in Chest:")
+        for idx, (ore, amt) in enumerate(ore_inventory.items(), 1):
+            print(f"{idx}. {ore} Ore - {amt}kg")
+        choice = input("Choose ore to smelt (number): ")
+        if not choice.isdigit() or not (1 <= int(choice) <= len(ore_inventory)):
             print("Invalid choice.")
+            return
+        ore_type = list(ore_inventory.keys())[int(choice)-1]
+        available = ore_inventory[ore_type]
+        amount = input(f"Enter kg of {ore_type} Ore to smelt (max {available}): ")
+        if not amount.isdigit() or not (1 <= int(amount) <= available):
+            print("Invalid amount.")
+            return
+        amount = int(amount)
+        # Remove ore from chest
+        removed = 0
+        new_chest = []
+        for typ, amt in self.chest:
+            if typ == f"{ore_type} Ore" and removed < amount:
+                take = min(amt, amount - removed)
+                leftover = amt - take
+                removed += take
+                if leftover > 0:
+                    new_chest.append((typ, leftover))
+            else:
+                new_chest.append((typ, amt))
+        self.chest = new_chest
+        # Consume one Lava Bucket
+        self.items.remove("Lava Bucket")
+        # Add ingots
+        self.ingots[ore_type] += amount
+        print(f"Smelted {amount}kg of {ore_type} Ore into {amount}kg of {ore_type} Ingots.")
 
     def place_beacon(self):
         if "Beacon" not in self.items:
@@ -202,6 +228,7 @@ class Player:
         if area:
             self.beacons.append(area)
             print(f"Beacon placed at {area}.")
+
 
 def main():
     player = Player()
@@ -213,9 +240,8 @@ def main():
         "5": player.upgrade_backpack,
         "6": player.upgrade_chest,
         "7": player.shop,
-        "8": player.use_camera,
-        "9": player.delete_photo,
-        "10": player.place_beacon,
+        "8": player.smelt,
+        "9": player.place_beacon,
         "0": lambda: sys.exit(0)
     }
 
@@ -229,9 +255,8 @@ def main():
 5. Upgrade Backpack
 6. Upgrade Chest
 7. Shop
-8. Use Camera
-9. Delete Photo
-10. Place Beacon
+8. Smelt Ore in Furnace
+9. Place Beacon
 0. Exit
 """)
         choice = input("Choose an action: ")
