@@ -31,7 +31,6 @@ SHOP_ITEMS = {
     "Water Bucket": 56000,
     "Lava Bucket": 80000,
     "Bucket": 45000,
-    "Beacon": 25000,
     "Scuba Diving Suit": 35000,
     "Thermal Suit": 65000,
     "Fur Suit": 95000,
@@ -56,7 +55,6 @@ class Player:
         self.chest = []
         self.suits = set()
         self.items = set()
-        self.beacons = []
         self.ingots = {ore: 0 for ore in ORE_TYPES}
 
     @property
@@ -83,6 +81,11 @@ class Player:
         if not choice.isdigit() or not (1 <= int(choice) <= len(AREAS)):
             print("Invalid choice.")
             return
+        # Chance to find Coal instead of ore
+        if random.random() < 0.05:
+            print("\nYou discovered a chunk of Coal!")
+            self.items.add("Coal")
+            return
         area = AREAS[int(choice)-1]
         ore_type = ORE_TYPES[min(self.pickaxe_level, len(ORE_TYPES)-1)]
         yield_amount = int(random.randint(5, 15) * self.pickaxe_efficiency)
@@ -106,7 +109,6 @@ class Player:
         print(f"Ingots: {ingot_status}")
         print(f"Suits: {', '.join(self.suits) if self.suits else 'None'}")
         print(f"Items: {', '.join(self.items) if self.items else 'None'}")
-        print(f"Beacons placed: {len(self.beacons)}")
         print("==============")
 
     def deposit_backpack(self):
@@ -175,11 +177,10 @@ class Player:
             print("Not enough money.")
 
     def smelt(self):
-        # Allow fuel from Lava Bucket or Coal
-        if "Lava Bucket" not in self.items and "Coal" not in self.items:
-            print("You need a Lava Bucket or Coal to fuel the furnace.")
+        # Allow fuel from Coal or Lava Bucket
+        if "Coal" not in self.items and "Lava Bucket" not in self.items:
+            print("You need Coal or a Lava Bucket to fuel the furnace.")
             return
-        # Gather available ores in chest
         ore_inventory = {}
         for typ, amt in self.chest:
             if "Ore" in typ:
@@ -202,7 +203,6 @@ class Player:
             print("Invalid amount.")
             return
         amount = int(amount)
-        # Remove ore from chest
         removed = 0
         new_chest = []
         for typ, amt in self.chest:
@@ -218,22 +218,10 @@ class Player:
         # Consume fuel
         if "Coal" in self.items:
             self.items.remove("Coal")
-            print("Consumed 1 Coal to fuel the furnace.")
         else:
             self.items.remove("Lava Bucket")
-            print("Consumed 1 Lava Bucket to fuel the furnace.")
-        # Add ingots
         self.ingots[ore_type] += amount
         print(f"Smelted {amount}kg of {ore_type} Ore into {amount}kg of {ore_type} Ingots.")
-
-    def place_beacon(self):
-        if "Beacon" not in self.items:
-            print("You don't have a beacon.")
-            return
-        area = input("Enter the name of the area to place beacon: ")
-        if area:
-            self.beacons.append(area)
-            print(f"Beacon placed at {area}.")
 
 
 def main():
@@ -247,7 +235,6 @@ def main():
         "6": player.upgrade_chest,
         "7": player.shop,
         "8": player.smelt,
-        "9": player.place_beacon,
         "0": lambda: sys.exit(0)
     }
 
@@ -262,7 +249,6 @@ def main():
 6. Upgrade Chest
 7. Shop
 8. Smelt Ore in Furnace
-9. Place Beacon
 0. Exit
 """)
         choice = input("Choose an action: ")
