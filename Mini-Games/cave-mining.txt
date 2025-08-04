@@ -53,3 +53,4 @@ The Lost River
 Red Cave
 
 Furnace:
+Put coal inside and then insert the ores to smelt them into ingots. 
