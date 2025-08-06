@@ -42,7 +42,6 @@ AREAS = [
     "Impossible", "The Lost River", "Red Cave"
 ]
 
-# Map pickaxe level to ore type
 ORE_TYPES = ["Copper", "Iron", "Gold", "Diamond"]
 
 class Player:
