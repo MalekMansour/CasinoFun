@@ -177,7 +177,6 @@ class Player:
             print("Not enough money.")
 
     def smelt(self):
-        # Allow fuel from Coal or Lava Bucket
         if "Coal" not in self.items and "Lava Bucket" not in self.items:
             print("You need Coal or a Lava Bucket to fuel the furnace.")
             return
