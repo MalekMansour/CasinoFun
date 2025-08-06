@@ -81,7 +81,6 @@ class Player:
         if not choice.isdigit() or not (1 <= int(choice) <= len(AREAS)):
             print("Invalid choice.")
             return
-        # Chance to find Coal instead of ore
         if random.random() < 0.05:
             print("\nYou discovered a chunk of Coal!")
             self.items.add("Coal")
