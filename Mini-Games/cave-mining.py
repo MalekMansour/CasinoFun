@@ -215,7 +215,6 @@ class Player:
             else:
                 new_chest.append((typ, amt))
         self.chest = new_chest
-        # Consume fuel
         if "Coal" in self.items:
             self.items.remove("Coal")
         else:
