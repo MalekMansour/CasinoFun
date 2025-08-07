@@ -5,7 +5,7 @@ import sys
 PICKAXE_UPGRADES = [
     {"name": "Stone", "efficiency": 1, "cost": 0},
     {"name": "Copper", "efficiency": 1.5, "cost": 4},   # 4kg Copper ingots
-    {"name": "Iron", "efficiency": 2, "cost": 10},    # 10kg Iron ingots
+    {"name": "Iron", "efficiency": 2, "cost": 10},    
     {"name": "Gold", "efficiency": 2.5, "cost": 24},
     {"name": "Diamond", "efficiency": 3, "cost": 36}, 
 ]
