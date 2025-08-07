@@ -9,7 +9,6 @@ PICKAXE_UPGRADES = [
     {"name": "Diamond", "efficiency": 3, "cost": 36}, 
 ]
 
-# Backpack and chest upgrades
 BACKPACK_UPGRADES = [
     {"capacity": 100, "cost": 0},
     {"capacity": 150, "cost": 4000},
