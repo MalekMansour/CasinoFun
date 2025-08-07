@@ -7,7 +7,7 @@ PICKAXE_UPGRADES = [
     {"name": "Copper", "efficiency": 1.5, "cost": 4},   # 4kg Copper ingots
     {"name": "Iron", "efficiency": 2, "cost": 10},    # 10kg Iron ingots
     {"name": "Gold", "efficiency": 2.5, "cost": 24},   # 24kg Gold ingots
-    {"name": "Diamond", "efficiency": 3, "cost": 36}, # 36kg Diamond ingots
+    {"name": "Diamond", "efficiency": 3, "cost": 36}, 
 ]
 
 # Backpack and chest upgrades
@@ -29,7 +29,7 @@ CHEST_UPGRADES = [
 # Shop items
 SHOP_ITEMS = {
     "Water Bucket": 56000,
-    "Lava Bucket": 80000,
+    "Lava Bucket": 60000,
     "Bucket": 45000,
     "Scuba Diving Suit": 35000,
     "Thermal Suit": 65000,
