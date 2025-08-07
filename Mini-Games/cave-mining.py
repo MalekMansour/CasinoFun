@@ -1,7 +1,6 @@
 import random
 import sys
 
-# Upgrade definitions (cost = required ingots to upgrade pickaxe)
 PICKAXE_UPGRADES = [
     {"name": "Stone", "efficiency": 1, "cost": 0},
     {"name": "Copper", "efficiency": 1.5, "cost": 4},  
