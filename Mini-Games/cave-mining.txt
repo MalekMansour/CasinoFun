@@ -34,6 +34,9 @@ Used as fuel for the furnace.
 Beacon: $25,000
 Used as a marker to remember where some places are.
 
+Lube: $8,000
+Used to easily slide inside tight holes.
+
 Areas: 24
 Easy
 Medium
