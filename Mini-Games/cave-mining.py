@@ -235,7 +235,7 @@ def main():
     while True:
         print("""
 === Menu ===
-1. Show Status
+1. Status
 2. Explore
 3. Deposit Backpack to Chest
 4. Upgrade Pickaxe
