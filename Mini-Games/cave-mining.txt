@@ -20,7 +20,7 @@ Camera: $38,000
 Can take photos. Up to 25 photos max. You can delete photos and print photos to stick them to walls.
 
 Rope: $6,000
-Used to pull your friends up from thight holes.
+Used to pull your friends up from thight openings.
 
 Bucket: $45,000
 Used to fill up water and lava.
@@ -35,7 +35,7 @@ Beacon: $25,000
 Used as a marker to remember where some places are.
 
 Lube: $8,000
-Used to easily slide inside tight enterings.
+Used to easily slide inside tight openings.
 
 Areas: 24
 Easy
