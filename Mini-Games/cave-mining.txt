@@ -39,9 +39,9 @@ Used to easily slide inside tight openings.
 
 Areas: 
 Easy
-Medium
+Medium -> (Bottomless, Hell Hole, Thai Rescue)
 Hard -> (Nutty Putty, Lava Zone, Frozen Lake, Backrooms, Poolrooms)
-Extreme -> (
+Extreme -> (Swamp, The Lost River, Red Cave, Impossible)
 Nutty Putty
 Bottomless
 Backrooms
