@@ -38,9 +38,9 @@ Lube: $8,000
 Used to easily slide inside tight openings.
 
 Areas: 
-Easy
+Easy -> (Mossy Caverns, Sandy Burrow)
 Medium -> (Bottomless, Hell Hole, Thai Rescue)
-Hard -> (Nutty Putty, Lava Zone, Frozen Lake, Backrooms, Poolrooms)
+Hard -> (Nutty Putty, Lava Zone, Frozen Lake, Crystal Hollow, Backrooms, Poolrooms)
 Extreme -> (Swamp, The Lost River, Red Cave, Impossible)
 Nutty Putty
 Bottomless
