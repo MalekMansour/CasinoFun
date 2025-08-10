@@ -40,8 +40,8 @@ Used to easily slide inside tight openings.
 Areas: 
 Easy
 Medium
-Hard
-Extreme
+Hard -> (Nutty Putty, Lava Zone, Frozen Lake, Backrooms, Poolrooms)
+Extreme -> (
 Nutty Putty
 Bottomless
 Backrooms
