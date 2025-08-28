@@ -224,8 +224,8 @@ class Soundboard(tk.Tk):
             w.destroy()
         for i, s in enumerate(self.sounds):
             ttk.Label(self.inner, text=s["name"], width=30).grid(row=i, column=0, padx=5, pady=2, sticky="w")
-            ttk.Button(self.inner, text="▶ Play", command=lambda i=i: self.play(i)).grid(row=i, column=1, padx=5, pady=2)
-            ttk.Button(self.inner, text="🔑 Assign", command=lambda i=i: self.assign(i)).grid(row=i, column=2, padx=5, pady=2)
+            ttk.Button(self.inner, text="Play", command=lambda i=i: self.play(i)).grid(row=i, column=1, padx=5, pady=2)
+            ttk.Button(self.inner, text="Assign", command=lambda i=i: self.assign(i)).grid(row=i, column=2, padx=5, pady=2)
             ttk.Button(self.inner, text="🗑 Delete", command=lambda i=i: self.delete(i)).grid(row=i, column=3, padx=5, pady=2)
 
     def delete(self, idx):
