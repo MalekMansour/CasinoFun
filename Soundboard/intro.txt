@@ -1,4 +1,0 @@
-# Soundboard
-
-You can upload sounds and use shortcuts to play those sounds through your computer.
-The main issue that I cannot figure out is how to make the sounds play through both your device and your mic at the same time.
