@@ -1,6 +1,6 @@
 # CasinoFun
 
-A simple, browser-based online simulator casino with all your favorites in one place.
+A simple, browser-based online simulator casino with all your favorites in one page.
 
 ## Games
 
@@ -11,7 +11,3 @@ A simple, browser-based online simulator casino with all your favorites in one p
 * **Dice**: Guess the roll.
 * **Crash**: Cash out before the multiplier crashes.
 * **Higher or Lower**: Predict if the next value is higher or lower.
-
-## Bugs
-
-There is a bug that happens when you run out of money it gives you money right away even if you win your bet.
